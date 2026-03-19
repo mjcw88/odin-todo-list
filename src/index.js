@@ -1,4 +1,4 @@
 import "./styles.css";
-import { test } from "./test.js";
+import { addTaskFormController } from "./addTaskFormController.js";
 
-console.log(test);
+addTaskFormController.init();

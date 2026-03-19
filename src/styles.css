@@ -14,6 +14,8 @@ body {
     font-size: 1rem;
     line-height: 1.5;
     padding: var(--padding);
+}
 
-    background-color: purple;
+@media only screen and (min-width: 768px) {
+    
 }
