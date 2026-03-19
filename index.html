@@ -7,6 +7,40 @@
     <link rel="stylesheet" href="84bb4fc080631c2605f1.css">
 <script defer src="main.js"></script></head>
 <body>
-    HELLO, WORLD
+    <button id="open-task-form-btn">+</button>
+    <div class="add-task-form-container">
+        <dialog id="add-task-form">
+            <div class="add-task-header">
+                <h1>Add Task</h1>
+                <button type="button" id="close-form-btn">X</button>
+            </div>
+            <form>
+            <div>
+                <label for="title">Title</label>
+                <input type="text" id="title" name="title" maxlength="50" placeholder="Title" required>
+            </div>
+            <div>
+                <label for="description">Description</label>
+                <textarea id="description" name="description" maxlength="5000"></textarea>
+            </div>
+            <div>
+                <h3>Priority</h3>
+                <input type="radio" id="low-priority" name="priority" value="0">
+                <label for="low-priority">Low</label>
+                <input type="radio" id="medium-priority" name="priority" value="1" checked>
+                <label for="medium-priority">Medium</label>
+                <input type="radio" id="high-priority" name="priority" value="2">
+                <label for="high-priority">High</label>
+            </div>
+            <div>
+                <label for="date">Date</label>
+                <input type="date" id="date" name="date" required>
+            </div>
+            <div>
+                <button type="submit" id="add-task-btn">Add Task</button>
+            </div>
+            </form>
+        </dialog>
+    </div>
 </body>
 </html>
