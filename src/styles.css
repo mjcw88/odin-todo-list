@@ -24,6 +24,10 @@ body {
     line-height: 1.5;
 }
 
+.no-transition * {
+    transition: none !important;
+}
+
 header {
     background-color: #666;
     padding: var(--padding);

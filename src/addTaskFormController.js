@@ -1,6 +1,6 @@
-const openFormBtn = document.getElementById("open-task-form-btn");
-const addTaskForm = document.getElementById("add-task-form");
-const form = document.getElementById("add-task-form").querySelector("form");
+const openFormBtn = document.getElementById("open-new-form-btn");
+const addTaskForm = document.getElementById("create-new-form");
+const form = document.getElementById("create-new-form").querySelector("form");
 const closeFormBtn = document.getElementById("close-form-btn");
 const date = document.getElementById("date")
 
@@ -10,6 +10,7 @@ export const addTaskFormController = {
             date.value = new Date().toISOString().split("T")[0];
             addTaskForm.showModal();
         });
+
         closeFormBtn.addEventListener("click", () => {
             addTaskForm.close();
             form.reset();
