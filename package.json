@@ -15,7 +15,7 @@
   "scripts": {
     "dev": "webpack serve",
     "build": "webpack",
-    "predeploy": "git checkout gh-pages && git merge main --no-edit",
+    "predeploy": "webpack && git checkout gh-pages && git merge main --no-edit --strategy-option theirs",
     "deploy": "git add dist -f && git commit -m 'Deployment commit' && git subtree push --prefix dist origin gh-pages && git checkout main"
   }
 }
