@@ -5,8 +5,10 @@
     --hamburgerGap: 6px;
     --foreground: #333;
     --background: white;
-    --animationTiming: 200ms ease-in-out;
+    --animationTiming: 250ms ease-in-out;
     --hamburgerHeight: calc(var(--barHeight) * 3 + var(--hamburgerGap) * 2);
+    --headerHeight: 5rem;
+    --sidebarWidth: 250px;
 }
 
 *,
@@ -24,18 +26,33 @@ body {
     line-height: 1.5;
 }
 
+button {
+    cursor: pointer;
+}
+
 .no-transition * {
     transition: none !important;
 }
 
 header {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    position: relative;
     background-color: #666;
     padding: var(--padding);
+    height: var(--headerHeight);
+}
+
+.todo-list-header {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
 .header-container {
     display: flex;
-    justify-content: flex-end;
+    margin-bottom: 1rem;
 }
 
 .dropdown-menu {
@@ -108,13 +125,14 @@ header {
 
 .sidebar {
     position: fixed;
-    top: 5.5rem;
+    top: var(--headerHeight);
     left: 0;
     translate: -100%;
     padding: var(--padding);
     background-color: var(--foreground);
     color: var(--background);
     width: 50%;
+    max-width: var(--sidebarWidth);
     height: 100vh;
     transition: translate var(--animationTiming);
 }
@@ -130,64 +148,70 @@ header {
     gap: 1rem;
 }
 
-.sidebar-list > li {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-}
-
+.sidebar-list > li,
 .sidebar-list > li > button {
+    display: flex;
+    justify-content: space-between;
     width: 100%;
-    cursor: pointer;
 }
 
-#create-new-form {
+#new-task-form,
+#new-project-form {
     position: fixed;
     top: 50%;
     left: 50%;
     translate: -50% -50%;
-    width: 100%;
+    width: min(100%, 500px);
     padding: var(--padding);
 }
 
-.create-new-sidebar > button,
-.form-row > button {
-    cursor: pointer;
-    width: 100%;
-}
-
-.create-new-header {
+.form-header {
     display: flex;
     justify-content: center;
 }
 
-.form-row {
-    display: flex;
-    justify-content: flex-start;
-    flex-direction: column;
-    flex-wrap: wrap;
-}
-
-.priority-row,
-.date-row {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-}
-
-#description {
+#task-description {
     resize: none;
     height: 10rem;
+}
+
+.form-row {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    gap: 1rem;
+}
+
+.form-row input[type='text'],
+#task-description {
     width: 100%;
 }
 
-.create-new-header,
-.create-new-sidebar,
+.form-row > button,
+.priority-row,
+.date-row,
+.project-row {
+    flex: 1;
+}
+
+.form-header,
 .form-row,
 .priority-row,
-.date-row {
+.date-row,
+.project-form-row {
     margin-bottom: 20px;
+}
+
+.priority-row,
+.date-row,
+.project-row {
+    display: flex;
+    flex-direction: column;
+}
+
+.project-form-row {
+    display: flex;
+    flex-direction: column;
 }
 
 .main-body-container {
@@ -220,7 +244,7 @@ header {
 @media only screen and (min-width: 768px) {
     body {
         display: grid;
-        grid-template-columns: min(25%, 500px) 1fr;
+        grid-template-columns: var(--sidebarWidth) 1fr;
         grid-template-rows: auto 1fr;
         min-height: 100vh;
         margin: 0;
@@ -248,16 +272,13 @@ header {
         grid-row: 1;
     }
 
-    .header-container {
-        display: flex;
-        justify-content: flex-end;
-    }
-
     .dropdown-menu {
         display: none;
     }
 
-    .create-new-main-body {
+    .new-task-main-body {
+        display: flex;
+        gap: 1rem;
         flex: 1;
     }
 
@@ -270,62 +291,10 @@ header {
 
     #contents {
         width: 100%;
-        max-width: 1400px;
-    }
-
-    #create-new-form {
-        min-width: calc(768px - var(--padding));
-        width: 50%;
-        max-width: 1000px;
-    }
-
-    .create-new-main-body {
-        display: flex;
-        gap: 1rem;
+        max-width: 2000px;
     }
 
     form {
         width: 100%;
-    }
-
-    .form-row {
-        flex-direction: row;
-        gap: 1rem;
-    }
-
-    .form-row input[type='text'] {
-        flex: 1;
-    }
-
-    .priority-row,
-    .date-row {
-        align-items: flex-start;
-        flex-direction: column;
-    }
-
-    .priority-row > div {
-        display: flex;
-        gap: 1rem;
-        width: 100%;
-    }
-
-    .priority-row,
-    .date-row {
-        align-items: flex-start;
-        flex-direction: column;
-        flex: 1;
-    }
-
-    #date {
-        width: 100%;
-    }
-
-    #close-form-btn {
-        margin-left: auto;
-        width: max-content;
-    }
-
-    #add-task-btn {
-        width: max-content;
     }
 }

@@ -8,59 +8,57 @@
 </head>
 <body>
     <div class="dropdown-container">
-        <label class="dropdown-menu">
-            <input type="checkbox">
+        <label class="dropdown-menu" id="dropdown-menu-label">
+            <input type="checkbox" id="dropdown-menu-checkbox">
         </label>
         <aside class="sidebar">
+            <div class="header-container">
+                <h1>ToDo List</h1>
+            </div>
             <ul class="sidebar-list">
-                <li class="create-new-container">
-                    <button id="open-new-form-btn">Create New</button>
-                    <div class="create-new-form-container">
-                        <dialog id="create-new-form">
-                            <div class="create-new-container">
-                                <div class="create-new-header">
-                                    <h1>Create New</h1>
+                <li class="new-task-container">
+                    <button id="open-new-task-btn">Add Task</button>
+                    <div class="form-container">
+                        <dialog id="new-task-form">
+                            <div class="new-task-container">
+                                <div class="form-header">
+                                    <h1>Add Task</h1>
                                 </div>
-                                <div class="create-new-main-body">
-                                    <div class="create-new-sidebar">
-                                        <button id="todo-form-btn">ToDo</button>
-                                        <button id="project-form-btn">Project</button>
-                                    </div>
+                                <div class="new-task-main-body">
                                     <form>
-                                    <div class="form-row">
-                                        <input type="text" id="title" name="title" maxlength="50" placeholder="Title" required>
-                                    </div>
-                                    <div class="form-row">
-
-                                        <textarea id="description" name="description" maxlength="5000" placeholder="Description"></textarea>
-                                    </div>
-                                    <div class="form-row">
-                                        <div class="priority-row">
-                                            <label for="priority">Priority</label>
-                                            <div>
-                                                <div>
-                                                    <input type="radio" id="low-priority" name="priority" value="0">
-                                                    <label for="low-priority">Low</label>
-                                                </div>
-                                                <div>
-                                                    <input type="radio" id="medium-priority" name="priority" value="1" checked>
-                                                    <label for="medium-priority">Medium</label>
-                                                </div>
-                                                <div>
-                                                    <input type="radio" id="high-priority" name="priority" value="2">
-                                                    <label for="high-priority">High</label>
-                                                </div>
+                                        <div class="form-row">
+                                            <input type="text" id="task-name" name="task-name" maxlength="50" placeholder="Task" required>
+                                        </div>
+                                        <div class="form-row">
+                                            <textarea id="task-description" name="task-description" maxlength="5000" placeholder="Description"></textarea>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="date-row">
+                                                <label for="date">Date</label>
+                                                <input type="date" id="date" name="date" required>
+                                            </div>
+                                            <div class="priority-row">
+                                                <label for="priority">Priority</label>
+                                                <select id="priority" name="priority">
+                                                    <option value="0">Low</option>
+                                                    <option value="1" selected>Medium</option>
+                                                    <option value="2">High</option>
+                                                </select>
+                                            </div>
+                                            <div class="project-row">
+                                                <label for="project">Project</label>
+                                                <select id="project" name="project">
+                                                    <option value="home" selected>Home</option>
+                                                    <option value="project1">Project 1</option>
+                                                    <option value="project2">Project 2</option>
+                                                    <option value="project3">Project 3</option>
+                                                </select>
                                             </div>
                                         </div>
-                                        <div class="date-row">
-                                            <label for="date">Date</label>
-                                            <input type="date" id="date" name="date" required>
+                                        <div class="form-row">
+                                            <button type="button" id="close-new-task-form-btn">Cancel</button>
+                                            <button type="submit" id="add-task-btn">Add</button>
                                         </div>
-                                    </div>
-                                    <div class="form-row">
-                                        <button type="button" id="close-form-btn">Cancel</button>
-                                        <button type="submit" id="add-task-btn">Add Task</button>
-                                    </div>
                                     </form>
                                 </div>
                             </div>
@@ -68,35 +66,94 @@
                     </div>
                 </li>
                 <li>
-                    <button id="home-btn">Home</button>
+                    <button id="home-btn">
+                        <div>Home</div>
+                        <div>(Num)</div>
+                    </button>
                 </li>
                 <li>
-                    <button id="today-btn">Today</button>
+                    <button id="today-btn">
+                        <div>Today</div>
+                        <div>(Num)</div>
+                    </button>
                 </li>
                 <li>
-                    <button id="upcoming-btn">Upcoming</button>
-                </li>
-                <li>Projects</li>
-                <li>
-                    <button id="project-1-btn">Project 1</button>
-                </li>
-                <li>
-                    <button id="project-2-btn">Project 2</button>
+                    <button id="upcoming-btn">
+                        <div>Upcoming</div>
+                        <div>(Num)</div>
+                    </button>
                 </li>
                 <li>
-                    <button id="project-3-btn">Project 3</button>
+                    <div>My Projects</div>
+                    <div>
+                        <button id="new-project-btn">+</button>
+                        <div class="form-container">
+                            <dialog id="new-project-form">
+                                <div class="new-project-container">
+                                    <div class="form-header">
+                                        <h1>Add Project</h1>
+                                    </div>
+                                    <div class="new-project-main-body">
+                                        <form>
+                                            <div class="project-form-row">
+                                                <label for="project-name">Project Name</label>
+                                                <input type="text" id="project-name" name="project-name" maxlength="50" placeholder="Project Name" required>
+                                            </div>
+                                            <div class="project-form-row">
+                                                <label for="project-colour">Colour</label>
+                                                <select id="project-colour" name="project-colour">
+                                                    <option value="000000">Black</option>
+                                                    <option value="FFFFFF">White</option>
+                                                    <option value="808080">Grey</option>
+                                                    <option value="F10102">Red</option>
+                                                    <option value="F10102">Purple</option>
+                                                    <option value="0228F5">Blue</option>
+                                                    <option value="03B306">Green</option>
+                                                    <option value="F9F807">Yellow</option>
+                                                    <option value="F77908">Orange</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-row">
+                                                <button type="button" id="close-new-project-form-btn">Cancel</button>
+                                                <button type="submit" id="add-project-btn">Add</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </dialog>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <button id="project1-btn">
+                        <div>Project 1</div>
+                        <div>(Num)</div>
+                    </button>
+                </li>
+                <li>
+                    <button id="project2-btn">
+                        <div>Project 2</div>
+                        <div>(Num)</div>
+                    </button>
+                </li>
+                <li>
+                    <button id="project3-btn">
+                        <div>Project 3</div>
+                        <div>(Num)</div>
+                    </button>
                 </li>
             </ul>
         </aside>
     </div>
     <header>
-        <div class="header-container">
-            <h1>ToDo List</h1>
+        <div class="todo-list-header">Placeholder Title</div>
+        <div class="header-buttons">
+            <button id="sort-btn">Sort</button>
+            <button id="filter-btn">Filter</button>            
         </div>
     </header>
     <div class="main-body-container">
         <div id="contents">
-            <div class="todo-list-header">Placeholder Title</div>
             <ul class="todo-list-container">
                 <li class="todo-container">
                     <div class="todo-container-left">
