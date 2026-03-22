@@ -13,7 +13,7 @@
         </label>
         <aside class="sidebar">
             <div class="header-container">
-                <h1>ToDo List</h1>
+                <h2>ToDo List</h2>
             </div>
             <ul class="sidebar-list">
                 <li class="new-task-container">
@@ -22,15 +22,16 @@
                         <dialog id="new-task-form">
                             <div class="new-task-container">
                                 <div class="form-header">
-                                    <h1>Add Task</h1>
+                                    <h2>Add Task</h2>
                                 </div>
                                 <div class="new-task-main-body">
                                     <form>
+                                        <input type="hidden" name="formType" value="newTask">
                                         <div class="form-row">
-                                            <input type="text" id="task-name" name="task-name" maxlength="50" placeholder="Task" required>
+                                            <input type="text" id="taskName" name="taskName" maxlength="50" placeholder="Task" required>
                                         </div>
                                         <div class="form-row">
-                                            <textarea id="task-description" name="task-description" maxlength="5000" placeholder="Description"></textarea>
+                                            <textarea id="taskDescription" name="taskDescription" maxlength="5000" placeholder="Description"></textarea>
                                         </div>
                                         <div class="form-row">
                                             <div class="date-row">
@@ -93,22 +94,23 @@
                             <dialog id="new-project-form">
                                 <div class="new-project-container">
                                     <div class="form-header">
-                                        <h1>Add Project</h1>
+                                        <h2>Add Project</h2>
                                     </div>
                                     <div class="new-project-main-body">
                                         <form>
+                                            <input type="hidden" name="formType" value="newProject">
                                             <div class="project-form-row">
                                                 <label for="project-name">Project Name</label>
-                                                <input type="text" id="project-name" name="project-name" maxlength="50" placeholder="Project Name" required>
+                                                <input type="text" id="projectName" name="projectName" maxlength="50" placeholder="Project Name" required>
                                             </div>
                                             <div class="project-form-row">
-                                                <label for="project-colour">Colour</label>
-                                                <select id="project-colour" name="project-colour">
+                                                <label for="projectColour">Colour</label>
+                                                <select id="projectColour" name="projectColour">
                                                     <option value="000000"><span class="black"></span>Black</option>
                                                     <option value="FFFFFF">White</option>
                                                     <option value="808080">Grey</option>
                                                     <option value="F10102">Red</option>
-                                                    <option value="F10102">Purple</option>
+                                                    <option value="9405F5">Purple</option>
                                                     <option value="0228F5">Blue</option>
                                                     <option value="03B306">Green</option>
                                                     <option value="F9F807">Yellow</option>
@@ -148,7 +150,6 @@
         </aside>
     </div>
     <header>
-        <div class="todo-list-header">Placeholder Title</div>
         <div class="header-buttons">
             <button id="sort-btn">Sort</button>
             <button id="filter-btn">Filter</button>            
@@ -156,6 +157,9 @@
     </header>
     <div class="main-body-container">
         <div id="contents">
+            <div class="todo-list-header">
+                <h2>Placeholder Title</h2>
+            </div>
             <ul class="todo-list-container">
                 <li class="todo-container">
                     <div class="todo-container-left">
