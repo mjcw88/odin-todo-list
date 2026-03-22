@@ -17,3 +17,9 @@ export const windowResize = {
         });
     }
 };
+
+export const renderProjects = {
+    init() {
+        console.log("RENDER PROJECTS");
+    }
+}

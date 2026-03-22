@@ -1,4 +1,4 @@
-export function storageAvailable(type) {
+function storageAvailable(type) {
     let storage;
     try {
         storage = window[type];
@@ -14,5 +14,13 @@ export function storageAvailable(type) {
             storage &&
             storage.length !== 0
         );
+    }
+}
+
+export function saveToStorage(obj) {
+    if (storageAvailable("localStorage")) {
+        localStorage.setItem(`${obj.id}`, JSON.stringify(obj));
+    } else {
+        console.error("localStorage unavailable");
     }
 }
