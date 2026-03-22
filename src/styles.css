@@ -44,12 +44,6 @@ header {
     height: var(--headerHeight);
 }
 
-.todo-list-header {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-}
-
 .header-container {
     display: flex;
     margin-bottom: 1rem;
@@ -170,7 +164,7 @@ header {
     justify-content: center;
 }
 
-#task-description {
+#taskDescription {
     resize: none;
     height: 10rem;
 }
@@ -183,7 +177,7 @@ header {
 }
 
 .form-row input[type='text'],
-#task-description {
+#taskDescription {
     width: 100%;
 }
 
