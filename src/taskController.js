@@ -68,7 +68,7 @@ const DEFAULT_TASKS = [
     {
         id: "a1b2c3d4-0006-0000-0000-000000000000",
         type: "task",
-        name: "deadlift 420* plates",
+        name: "deadlift 4 plates",
         desc: "deadlift 180kg for 5 reps",
         dueDate: defaultDates.year,
         priority: 2,

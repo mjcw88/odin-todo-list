@@ -215,7 +215,7 @@ header {
     padding: var(--padding);
 }
 
-#contents,
+#content,
 .todo-list-container {
     display: flex;
     flex-direction: column;
@@ -293,7 +293,7 @@ header {
         grid-row: 2;
     }
 
-    #contents {
+    #content {
         width: 100%;
         max-width: 2000px;
     }

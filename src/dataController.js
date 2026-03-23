@@ -1,7 +1,7 @@
 // Module imports
 import { loadFromStorage } from "./storageController.js";
 
-export function loadSideBarInfo() {
+export function loadSideBarData() {
     let homeCount = 0;
     let todayCount = 0;
     let upcomingCount = 0;
@@ -56,7 +56,7 @@ export function loadSideBarInfo() {
     return { homeCount, todayCount, upcomingCount, overdueCount, completedCount, projects };
 }
 
-export function loadTasksAndProjects() {
+export function loadHomeTabData() {
     const tasks = [];
     const projects = [];
     const objects = loadFromStorage();
@@ -65,22 +65,20 @@ export function loadTasksAndProjects() {
         if (obj.type === "task") {
             obj.dueDate = new Date(obj.dueDate);
             tasks.push(obj);
-        } else {
+        } else if (obj.type === "project") {
             projects.push(obj);
         }
     });
 
     tasks.sort((a, b) => a.dueDate - b.dueDate);
-    projects.sort((a, b) => a.id.localeCompare(b.id));
 
-    projects.forEach(project => {
-        project.tasks = [];
-        tasks.forEach(task => {
-            if (task.project === project.id) {
-                project.tasks.push(task);
-            }
-        });
+    tasks.forEach(task => {
+        if (task.project) {
+            const project = projects.find(({ id }) => id === task.project);
+            task.projectName = project?.name;
+        }
+        task.dueDate = task.dueDate.toLocaleDateString();
     });
 
-    return projects;
+    return tasks;
 };

@@ -1,11 +1,12 @@
 // Module imports
-import { loadSideBarInfo } from "./dataController.js";
+import { loadSideBarData, loadHomeTabData } from "./dataController.js";
 
 // Consts
 const dropDownMenuLabel = document.getElementById("dropdown-menu-label");
 const dropDownMenuCheckBox = document.getElementById("dropdown-menu-checkbox");
 const projectSidebarList = document.getElementById("project-sidebar-list");
 const projectSelection = document.getElementById("project");
+const content = document.getElementById("content");
 
 // Functions
 export const windowResize = {
@@ -26,7 +27,7 @@ export const windowResize = {
 };
 
 export function renderSideBar() {
-    const info = loadSideBarInfo();
+    const info = loadSideBarData();
 
     // Renders task counts on main buttons
     const homeCount = document.getElementById("home-count");
@@ -73,4 +74,58 @@ export function renderSideBar() {
         option.textContent = project.name;
         projectSelection.appendChild(option);
     })
+}
+
+export function renderHomeTab() {
+    const tasks = loadHomeTabData();
+
+    // Render tasks
+    content.innerHTML = "";
+
+    const header = document.createElement("div");
+    header.className = "todo-list-header";
+
+    const headerText = document.createElement("h2");
+    headerText.textContent = "All Tasks";
+
+    const ul = document.createElement("ul");
+    ul.className = "todo-list-container";
+
+    tasks.forEach(task => {
+        const li = document.createElement("li");
+        li.className = "todo-container";
+
+        const todoContainerLeft = document.createElement("div");
+        todoContainerLeft.className = "todo-container-left";
+
+        const titleDiv = document.createElement("div");
+        titleDiv.textContent = task.name;
+
+        const projectDiv = document.createElement("div");
+        if (task.projectName) projectDiv.textContent = task.projectName;
+
+        const todoContainerRight = document.createElement("div");
+        todoContainerRight.className = "todo-container-right";
+
+        const date = document.createElement("div");
+        date.textContent = task.dueDate;
+
+        const editDiv = document.createElement("div");
+        const editBtn = document.createElement("button");
+        editBtn.textContent = "Edit";
+
+        const deleteDiv = document.createElement("div");
+        const deleteBtn = document.createElement("button");
+        deleteBtn.textContent = "Delete";
+
+        editDiv.appendChild(editBtn);
+        deleteDiv.appendChild(deleteBtn);
+        todoContainerLeft.append(titleDiv, projectDiv);
+        todoContainerRight.append(date, editDiv, deleteDiv);
+        li.append(todoContainerLeft, todoContainerRight);
+        ul.appendChild(li);
+    })
+
+    header.append(headerText);
+    content.append(header, ul);
 }
