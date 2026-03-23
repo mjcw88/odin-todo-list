@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project: Todo List | The Odin Project</title>
+    <link rel="stylesheet" href="84bb4fc080631c2605f1.css">
+<script defer src="main.js"></script></head>
+<body>
+    <div class="dropdown-container">
+        <label class="dropdown-menu" id="dropdown-menu-label">
+            <input type="checkbox" id="dropdown-menu-checkbox">
+        </label>
+        <aside class="sidebar">
+            <div class="header-container">
+                <h2>ToDo List</h2>
+            </div>
+            <ul class="sidebar-list">
+                <li class="new-task-container">
+                    <button id="open-new-task-btn">Add Task</button>
+                    <div class="form-container">
+                        <dialog id="new-task-form">
+                            <div class="new-task-container">
+                                <div class="form-header">
+                                    <h2>Add Task</h2>
+                                </div>
+                                <div class="new-task-main-body">
+                                    <form>
+                                        <input type="hidden" name="formType" value="newTask">
+                                        <div class="form-row">
+                                            <input type="text" id="taskName" name="taskName" maxlength="50" placeholder="Task" required>
+                                        </div>
+                                        <div class="form-row">
+                                            <textarea id="taskDescription" name="taskDescription" maxlength="5000" placeholder="Description"></textarea>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="date-row">
+                                                <label for="date">Date</label>
+                                                <input type="date" id="date" name="date" required>
+                                            </div>
+                                            <div class="priority-row">
+                                                <label for="priority">Priority</label>
+                                                <select id="priority" name="priority">
+                                                    <option value="0">Low</option>
+                                                    <option value="1" selected>Medium</option>
+                                                    <option value="2">High</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class=form-row>
+                                            <div class="project-row">
+                                                <label for="project">Project</label>
+                                                <select id="project" name="project">
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <button type="button" id="close-new-task-form-btn">Cancel</button>
+                                            <button type="submit" id="add-task-btn">Add</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </dialog>
+                    </div>
+                </li>
+                <li>
+                    <button id="home-btn">
+                        <div>Home</div>
+                        <div id="home-count"></div>
+                    </button>
+                </li>
+                <li>
+                    <button id="today-btn">
+                        <div>Today</div>
+                        <div id="today-count"></div>
+                    </button>
+                </li>
+                <li>
+                    <button id="upcoming-btn">
+                        <div>Upcoming</div>
+                        <div id="upcoming-count"></div>
+                    </button>
+                </li>
+                <li>
+                    <button id="completed-btn">
+                        <div>Completed</div>
+                        <div id="completed-count"></div>
+                    </button>
+                </li>
+                <li>
+                    <button id="overdue-btn">
+                        <div>Overdue</div>
+                        <div id="overdue-count"></div>
+                    </button>
+                </li>
+            </ul>
+            <div class="my-projects-header">
+                <div>My Projects</div>
+                <div>
+                    <button id="new-project-btn">+</button>
+                    <div class="form-container">
+                        <dialog id="new-project-form">
+                            <div class="new-project-container">
+                                <div class="form-header">
+                                    <h2>Add Project</h2>
+                                </div>
+                                <div class="new-project-main-body">
+                                    <form>
+                                        <input type="hidden" name="formType" value="newProject">
+                                        <div class="project-form-row">
+                                            <label for="project-name">Project Name</label>
+                                            <input type="text" id="projectName" name="projectName" maxlength="50" placeholder="Project Name" required>
+                                        </div>
+                                        <div class="project-form-row">
+                                            <label for="projectColour">Colour</label>
+                                            <select id="projectColour" name="projectColour">
+                                                <option value="#000000">Black</option>
+                                                <option value="#FFFFFF">White</option>
+                                                <option value="#808080">Grey</option>
+                                                <option value="#F10102">Red</option>
+                                                <option value="#9405F5">Purple</option>
+                                                <option value="#0228F5">Blue</option>
+                                                <option value="#03B306">Green</option>
+                                                <option value="#F9F807">Yellow</option>
+                                                <option value="#F77908">Orange</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-row">
+                                            <button type="button" id="close-new-project-form-btn">Cancel</button>
+                                            <button type="submit" id="add-project-btn">Add</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </dialog>
+                    </div>
+                </div>
+            </div>
+            <ul class="sidebar-list" id="project-sidebar-list">
+            </ul>
+        </aside>
+    </div>
+    <header>
+        <div class="header-buttons">
+            <button id="sort-btn">Sort</button>
+            <button id="filter-btn">Filter</button>            
+        </div>
+    </header>
+    <div class="main-body-container">
+        <div id="content">
+        </div>
+    </div>
+</body>
+</html>
