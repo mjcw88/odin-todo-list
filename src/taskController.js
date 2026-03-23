@@ -1,5 +1,7 @@
 // Module imports
-import { saveToStorage } from "./saveToStorageController.js";
+import { saveToStorage } from "./storageController.js";
+
+const now = new Date();
 
 // defaultDates IIFE
 const defaultDates = (() => {
@@ -30,110 +32,148 @@ const defaultDates = (() => {
     today.setUTCHours(0, 0, 0, 0);
     dates.today = today;
 
+    // Dynamically creates a date one week behind from today
+    const oneWeekAgo = new Date(new Date().setDate(new Date().getDate() - 7));
+    oneWeekAgo.setUTCHours(0, 0, 0, 0);
+    dates.weekAgo = oneWeekAgo;
+
+
     return dates;
 })();
 
 // Default tasks on load 
 const DEFAULT_TASKS = [
     {
-        id: "a1b2c3d4-0005-0000-0000-000000000000",
+        id: "a1b2c3d4-0004-0000-0000-000000000000",
         type: "task",
         name: "bench 2 plates",
         desc: "bench press 100kg for 5 reps",
         dueDate: defaultDates.year,
         priority: 2,
-        project: "a1b2c3d4-0001-0000-0000-000000000000",
+        project: "a1b2c3d4-0000-0000-0000-000000000000",
         complete: false,
+        dateCreated: new Date(now.getTime() + 4000),
     },
     {
-        id: "a1b2c3d4-0006-0000-0000-000000000000",
+        id: "a1b2c3d4-0005-0000-0000-000000000000",
         type: "task",
         name: "squat 3 plates",
         desc: "squat 140kg for 5 reps",
         dueDate: defaultDates.year,
         priority: 2,
-        project: "a1b2c3d4-0001-0000-0000-000000000000",
+        project: "a1b2c3d4-0000-0000-0000-000000000000",
         complete: false,
+        dateCreated: new Date(now.getTime() + 5000),
     },
     {
-        id: "a1b2c3d4-0007-0000-0000-000000000000",
+        id: "a1b2c3d4-0006-0000-0000-000000000000",
         type: "task",
         name: "deadlift 420* plates",
         desc: "deadlift 180kg for 5 reps",
         dueDate: defaultDates.year,
         priority: 2,
-        project: "a1b2c3d4-0001-0000-0000-000000000000",
+        project: "a1b2c3d4-0000-0000-0000-000000000000",
         complete: false,
+        dateCreated: new Date(now.getTime() + 6000),
     },
     {
-        id: "a1b2c3d4-0008-0000-0000-000000000000",
+        id: "a1b2c3d4-0007-0000-0000-000000000000",
         type: "task",
         name: "complete the odin project",
         desc: "complete the odin project full stack javascript course",
         dueDate: defaultDates.sixMonths,
         priority: 3,
-        project: "a1b2c3d4-0002-0000-0000-000000000000",
+        project: "a1b2c3d4-0001-0000-0000-000000000000",
         complete: false,
+        dateCreated: new Date(now.getTime() + 7000),
     },
     {
-        id: "a1b2c3d4-0009-0000-0000-000000000000",
+        id: "a1b2c3d4-0008-0000-0000-000000000000",
         type: "task",
         name: "fix fence",
         desc: "fix hole in fence to stop dog from escaping",
         dueDate: defaultDates.sixMonths,
         priority: 1,
-        project: "a1b2c3d4-0003-0000-0000-000000000000",
+        project: "a1b2c3d4-0002-0000-0000-000000000000",
         complete: true,
+        dateCreated: new Date(now.getTime() + 8000),
     },
     {
-        id: "a1b2c3d4-0010-0000-0000-000000000000",
+        id: "a1b2c3d4-0009-0000-0000-000000000000",
         type: "task",
         name: "grass seed",
         desc: "lay down grass seed",
         dueDate: defaultDates.month,
         priority: 2,
-        project: "a1b2c3d4-0003-0000-0000-000000000000",
+        project: "a1b2c3d4-0002-0000-0000-000000000000",
         complete: false,
+        dateCreated: new Date(now.getTime() + 9000),
     },
     {
-        id: "a1b2c3d4-0011-0000-0000-000000000000",
+        id: "a1b2c3d4-0010-0000-0000-000000000000",
         type: "task",
         name: "chop up wood",
         desc: "chop up left over wood and take to recycling centre",
         dueDate: defaultDates.month,
         priority: 1,
+        project: "a1b2c3d4-0002-0000-0000-000000000000",
+        complete: false,
+        dateCreated: new Date(now.getTime() + 10000),
+    },
+    {
+        id: "a1b2c3d4-0011-0000-0000-000000000000",
+        type: "task",
+        name: "book flights",
+        desc: "book return flights for upcoming holiday",
+        dueDate: defaultDates.sixMonths,
+        priority: 2,
         project: "a1b2c3d4-0003-0000-0000-000000000000",
         complete: false,
+        dateCreated: new Date(now.getTime() + 11000),
     },
     {
         id: "a1b2c3d4-0012-0000-0000-000000000000",
+        type: "task",
+        name: "book hotel",
+        desc: "book hotel - max budget £100p/n",
+        dueDate: defaultDates.sixMonths,
+        priority: 2,
+        project: "a1b2c3d4-0003-0000-0000-000000000000",
+        complete: true,
+        dateCreated: new Date(now.getTime() + 12000),
+    },
+    {
+        id: "a1b2c3d4-0013-0000-0000-000000000000",
         type: "task",
         name: "take cat to vets",
         desc: "take the cat to the vets for their checkup and vaccinations",
         dueDate: defaultDates.today,
         priority: 2,
-        project: "a1b2c3d4-0004-0000-0000-000000000000",
+        project: null,
         complete: true,
-    },
-    {
-        id: "a1b2c3d4-0013-0000-0000-000000000000",
-        type: "task",
-        name: "take nan to the GP",
-        desc: "take nan to the GP for her routine checkup",
-        dueDate: defaultDates.week,
-        priority: 3,
-        project: "a1b2c3d4-0004-0000-0000-000000000000",
-        complete: false,
+        dateCreated: new Date(now.getTime() + 13000),
     },
     {
         id: "a1b2c3d4-0014-0000-0000-000000000000",
+        type: "task",
+        name: "take nan to the GP",
+        desc: "take nan to the GP for her routine checkup",
+        dueDate: defaultDates.weekAgo,
+        priority: 3,
+        project: null,
+        complete: false,
+        dateCreated: new Date(now.getTime() + 14000),
+    },
+    {
+        id: "a1b2c3d4-0015-0000-0000-000000000000",
         type: "task",
         name: "fix drawer",
         desc: "fix broken screw in drawer meaning I can't open it properly",
         dueDate: defaultDates.sixMonths,
         priority: 1,
-        project: "a1b2c3d4-0004-0000-0000-000000000000",
+        project: null,
         complete: false,
+        dateCreated: new Date(now.getTime() + 15000),
     },
 ]
 
@@ -159,6 +199,7 @@ function createTaskObj(name, desc, dueDate, priority, project) {
         priority: priority,
         project: project,
         complete: false,
+        dateCreated: new Date(),
     };
 }
 

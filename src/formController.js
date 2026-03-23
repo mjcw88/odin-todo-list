@@ -1,6 +1,7 @@
 // Module imports
 import { createTask } from "./taskController.js";
 import { createProject } from "./projectController.js"
+import { renderSideBar } from "./displayerController.js";
 
 // New Task consts
 const newTaskBtn = document.getElementById("open-new-task-btn");
@@ -39,6 +40,8 @@ function submitForm(form) {
     } else {
         createProject(data);
     }
+
+    renderSideBar();
 }
 
 export const addFormController = {

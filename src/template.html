@@ -51,10 +51,6 @@
                                             <div class="project-row">
                                                 <label for="project">Project</label>
                                                 <select id="project" name="project">
-                                                    <option value="home" selected>Home</option>
-                                                    <option value="project1">Project 1</option>
-                                                    <option value="project2">Project 2</option>
-                                                    <option value="project3">Project 3</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -71,81 +67,77 @@
                 <li>
                     <button id="home-btn">
                         <div>Home</div>
-                        <div>(Num)</div>
+                        <div id="home-count"></div>
                     </button>
                 </li>
                 <li>
                     <button id="today-btn">
                         <div>Today</div>
-                        <div>(Num)</div>
+                        <div id="today-count"></div>
                     </button>
                 </li>
                 <li>
                     <button id="upcoming-btn">
                         <div>Upcoming</div>
-                        <div>(Num)</div>
+                        <div id="upcoming-count"></div>
                     </button>
                 </li>
                 <li>
-                    <div>My Projects</div>
-                    <div>
-                        <button id="new-project-btn">+</button>
-                        <div class="form-container">
-                            <dialog id="new-project-form">
-                                <div class="new-project-container">
-                                    <div class="form-header">
-                                        <h2>Add Project</h2>
-                                    </div>
-                                    <div class="new-project-main-body">
-                                        <form>
-                                            <input type="hidden" name="formType" value="newProject">
-                                            <div class="project-form-row">
-                                                <label for="project-name">Project Name</label>
-                                                <input type="text" id="projectName" name="projectName" maxlength="50" placeholder="Project Name" required>
-                                            </div>
-                                            <div class="project-form-row">
-                                                <label for="projectColour">Colour</label>
-                                                <select id="projectColour" name="projectColour">
-                                                    <option value="#000000">Black</option>
-                                                    <option value="#FFFFFF">White</option>
-                                                    <option value="#808080">Grey</option>
-                                                    <option value="#F10102">Red</option>
-                                                    <option value="#9405F5">Purple</option>
-                                                    <option value="#0228F5">Blue</option>
-                                                    <option value="#03B306">Green</option>
-                                                    <option value="#F9F807">Yellow</option>
-                                                    <option value="#F77908">Orange</option>
-                                                </select>
-                                            </div>
-                                            <div class="form-row">
-                                                <button type="button" id="close-new-project-form-btn">Cancel</button>
-                                                <button type="submit" id="add-project-btn">Add</button>
-                                            </div>
-                                        </form>
-                                    </div>
+                    <button id="completed-btn">
+                        <div>Completed</div>
+                        <div id="completed-count"></div>
+                    </button>
+                </li>
+                <li>
+                    <button id="overdue-btn">
+                        <div>Overdue</div>
+                        <div id="overdue-count"></div>
+                    </button>
+                </li>
+            </ul>
+            <div class="my-projects-header">
+                <div>My Projects</div>
+                <div>
+                    <button id="new-project-btn">+</button>
+                    <div class="form-container">
+                        <dialog id="new-project-form">
+                            <div class="new-project-container">
+                                <div class="form-header">
+                                    <h2>Add Project</h2>
                                 </div>
-                            </dialog>
-                        </div>
+                                <div class="new-project-main-body">
+                                    <form>
+                                        <input type="hidden" name="formType" value="newProject">
+                                        <div class="project-form-row">
+                                            <label for="project-name">Project Name</label>
+                                            <input type="text" id="projectName" name="projectName" maxlength="50" placeholder="Project Name" required>
+                                        </div>
+                                        <div class="project-form-row">
+                                            <label for="projectColour">Colour</label>
+                                            <select id="projectColour" name="projectColour">
+                                                <option value="#000000">Black</option>
+                                                <option value="#FFFFFF">White</option>
+                                                <option value="#808080">Grey</option>
+                                                <option value="#F10102">Red</option>
+                                                <option value="#9405F5">Purple</option>
+                                                <option value="#0228F5">Blue</option>
+                                                <option value="#03B306">Green</option>
+                                                <option value="#F9F807">Yellow</option>
+                                                <option value="#F77908">Orange</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-row">
+                                            <button type="button" id="close-new-project-form-btn">Cancel</button>
+                                            <button type="submit" id="add-project-btn">Add</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </dialog>
                     </div>
-                </li>
-                <li>
-                    <button id="project1-btn">
-                        <div>Project 1</div>
-                        <div>(Num)</div>
-                    </button>
-                </li>
-                <li>
-                    <button id="project2-btn">
-                        <div>Project 2</div>
-                        <div>(Num)</div>
-                    </button>
-                </li>
-                <li>
-                    <button id="project3-btn">
-                        <div>Project 3</div>
-                        <div>(Num)</div>
-                    </button>
-                </li>
+                </div>
+            </div>
+            <ul class="sidebar-list" id="project-sidebar-list">
             </ul>
         </aside>
     </div>

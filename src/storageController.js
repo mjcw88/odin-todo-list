@@ -24,3 +24,16 @@ export function saveToStorage(obj) {
         console.error("localStorage unavailable");
     }
 }
+
+export function loadFromStorage() {
+    const objects = [];
+    
+    if (storageAvailable("localStorage")) {
+        Object.keys(localStorage).forEach(key => {
+            objects.push(JSON.parse(localStorage.getItem(key)));
+        })
+    } else {
+        console.error("localStorage unavailable");
+    }
+    return objects;
+}

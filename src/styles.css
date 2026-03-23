@@ -118,6 +118,9 @@ header {
 }
 
 .sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
     position: fixed;
     top: var(--headerHeight);
     left: 0;
@@ -129,6 +132,7 @@ header {
     max-width: var(--sidebarWidth);
     height: 100vh;
     transition: translate var(--animationTiming);
+
 }
 
 .dropdown-menu:has(input:checked) + .sidebar {
@@ -143,7 +147,8 @@ header {
 }
 
 .sidebar-list > li,
-.sidebar-list > li > button {
+.sidebar-list > li > button,
+.my-projects-header {
     display: flex;
     justify-content: space-between;
     width: 100%;
