@@ -1,10 +1,10 @@
 // Module imports
-import { loadFromStorage } from "./storageController.js";
+import { loadAllFromStorage } from "./storageController.js";
 
 function fetchData() {
     const tasks = [];
     const projects = [];
-    const objects = loadFromStorage();
+    const objects = loadAllFromStorage();
 
     objects.forEach(obj => {
         if (obj.type === "task") {
@@ -46,12 +46,12 @@ export function loadSideBarData() {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    homeCount = tasks.length;
-
     tasks.forEach(task => {
-        if (task.complete === true) {
+        if (task.complete) {
             completedCount++;
             return;
+        } else if (!task.complete) {
+            homeCount++;
         }
 
         if (task.dueDate.toDateString() === today.toDateString()) {
@@ -81,9 +81,11 @@ export function loadSideBarData() {
 export function loadHomeTabData() {
     const { tasks, projects } = fetchData();
 
-    sortTasksByDueDate(tasks);
+    const dueTasks = tasks.filter((task) => task.complete === false);
 
-    return assignProjectsToTasks(tasks, projects);
+    sortTasksByDueDate(dueTasks);
+
+    return assignProjectsToTasks(dueTasks, projects);
 }
 
 export function loadTodayTabData() {

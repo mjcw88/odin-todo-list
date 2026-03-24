@@ -25,7 +25,7 @@ export function saveToStorage(obj) {
     }
 }
 
-export function loadFromStorage() {
+export function loadAllFromStorage() {
     const objects = [];
     
     if (storageAvailable("localStorage")) {
@@ -36,4 +36,13 @@ export function loadFromStorage() {
         console.error("localStorage unavailable");
     }
     return objects;
+}
+
+export function loadTask(taskId) {
+    if (storageAvailable("localStorage")) {
+        return JSON.parse(localStorage.getItem(`${taskId}`));
+    } else {
+        console.error("localStorage unavailable");
+        return null;
+    }
 }

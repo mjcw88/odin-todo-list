@@ -7,11 +7,12 @@ import { renderSideBar, renderHomeTab, windowResize } from "./displayController.
 import { eventListeners } from "./eventsController.js";
 
 // Initilisation
+defaultTasks.init();
+defaultProjects.init();
+
 renderSideBar();
 renderHomeTab();
 
-defaultTasks.init();
-defaultProjects.init();
 addFormController.init();
 eventListeners.init();
 windowResize.init();

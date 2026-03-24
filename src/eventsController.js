@@ -1,4 +1,5 @@
-import { renderHomeTab, renderTodayTab, renderUpcomingTab, renderCompletedTab, renderOverdueTab, renderProjectTab } from "./displayController.js";
+import { renderHomeTab, renderTodayTab, renderUpcomingTab, renderCompletedTab, renderOverdueTab, renderProjectTab, renderSideBar, deleteTaskFromPage } from "./displayController.js";
+import { toggleCompleteStatus } from "./taskController.js";
 
 export const eventListeners = {
     init() {
@@ -16,12 +17,21 @@ export const eventListeners = {
         overdueBtn.addEventListener("click", renderOverdueTab);
 
         projectBtns.forEach(btn => {
-            addClickEvent(btn);
+            addProjectClickEvent(btn);
         });
     }
 }
 
-export function addClickEvent(btn) {
-    btn.addEventListener("click", () => 
-        renderProjectTab(btn.dataset.projectId))
+export function addProjectClickEvent(btn) {
+    btn.addEventListener("click", () => {
+        renderProjectTab(btn.dataset.projectId)
+    });
+}
+
+export function addCompleteClickEvent(btn) {
+    btn.addEventListener("click", () => {
+        toggleCompleteStatus(btn.dataset.taskIdBtn);
+        renderSideBar();
+        deleteTaskFromPage(btn.dataset.taskIdBtn);
+    });
 }

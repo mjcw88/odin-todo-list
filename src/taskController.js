@@ -1,5 +1,6 @@
 // Module imports
-import { saveToStorage } from "./storageController.js";
+import { loadCompletedTabData } from "./dataController.js";
+import { saveToStorage, loadTask } from "./storageController.js";
 
 const now = new Date();
 
@@ -216,5 +217,11 @@ export function createTask(data) {
     }
 
     const task = createTaskObj(name, desc, dueDate, priority, project);
+    saveToStorage(task);
+}
+
+export function toggleCompleteStatus(taskId) {
+    const task = loadTask(taskId);
+    task.complete = !task.complete;
     saveToStorage(task);
 }
