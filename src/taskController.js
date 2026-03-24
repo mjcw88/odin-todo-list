@@ -150,7 +150,7 @@ const DEFAULT_TASKS = [
         dueDate: defaultDates.today,
         priority: 2,
         project: null,
-        complete: true,
+        complete: false,
         dateCreated: new Date(now.getTime() + 13000),
     },
     {
@@ -172,7 +172,7 @@ const DEFAULT_TASKS = [
         dueDate: defaultDates.sixMonths,
         priority: 1,
         project: null,
-        complete: false,
+        complete: true,
         dateCreated: new Date(now.getTime() + 15000),
     },
 ]
