@@ -1,4 +1,4 @@
-import { renderHomeTab, renderTodayTab, renderUpcomingTab, renderCompletedTab, renderOverdueTab, renderProjectTab, renderSideBar, deleteTaskFromPage } from "./displayController.js";
+import { renderHomeTab, renderTodayTab, renderUpcomingTab, renderCompletedTab, renderOverdueTab, renderProjectTab, renderSideBar, removeTaskFromPage } from "./displayController.js";
 import { toggleCompleteStatus } from "./taskController.js";
 
 export const eventListeners = {
@@ -32,6 +32,6 @@ export function addCompleteClickEvent(btn) {
     btn.addEventListener("click", () => {
         toggleCompleteStatus(btn.dataset.taskIdBtn);
         renderSideBar();
-        deleteTaskFromPage(btn.dataset.taskIdBtn);
+        removeTaskFromPage(btn.dataset.taskIdBtn);
     });
 }

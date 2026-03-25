@@ -95,7 +95,7 @@ export function renderSideBar() {
     projectSelection.innerHTML = "";
 
     const option = document.createElement("option");
-    option.value = "home";
+    option.value = null;
     option.textContent = "Home";
     projectSelection.appendChild(option);
 
@@ -156,7 +156,7 @@ export function renderProjectTab(projectId) {
     renderTaskList(projectTasks, projectName, true);
 }
 
-export function deleteTaskFromPage(taskId) {
+export function removeTaskFromPage(taskId) {
     const header = document.getElementById("main-tab-header");
 
     if (header.hasAttribute("data-project-tab")) {

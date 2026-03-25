@@ -38,9 +38,9 @@ export function loadAllFromStorage() {
     return objects;
 }
 
-export function loadTask(taskId) {
+export function fetchItem(id) {
     if (storageAvailable("localStorage")) {
-        return JSON.parse(localStorage.getItem(`${taskId}`));
+        return JSON.parse(localStorage.getItem(`${id}`));
     } else {
         console.error("localStorage unavailable");
         return null;
