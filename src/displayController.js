@@ -160,10 +160,10 @@ export function removeTaskFromPage(taskId) {
     const header = document.getElementById("main-tab-header");
 
     if (header.hasAttribute("data-project-tab")) {
-        const btn = document.querySelector(`[data-task-id-btn=${taskId}]`);
+        const btn = document.querySelector(`[data-task-id-btn="${taskId}"]`);
         btn.textContent === "Complete" ? btn.textContent = "Uncomplete" : btn.textContent = "Complete";
     } else {
-        const taskEl = document.querySelector(`[data-task-id=${taskId}]`);
+        const taskEl = document.querySelector(`[data-task-id="${taskId}"]`)
         taskEl.remove();
     }
 }
