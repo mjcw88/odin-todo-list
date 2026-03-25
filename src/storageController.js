@@ -46,3 +46,11 @@ export function fetchItem(id) {
         return null;
     }
 }
+
+export function deleteTaskFromStorage(id) {
+    if (storageAvailable("localStorage")) {
+        localStorage.removeItem(id);
+    } else {
+        console.error("localStorage unavailable");
+    }
+}

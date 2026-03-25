@@ -1,5 +1,6 @@
-import { renderHomeTab, renderTodayTab, renderUpcomingTab, renderCompletedTab, renderOverdueTab, renderProjectTab, renderSideBar, removeTaskFromPage } from "./displayController.js";
+import { renderHomeTab, renderTodayTab, renderUpcomingTab, renderCompletedTab, renderOverdueTab, renderProjectTab, renderSideBar, toggleCompleteBtnText, removeTaskFromPage } from "./displayController.js";
 import { toggleCompleteStatus } from "./taskController.js";
+import { deleteTaskFromStorage } from "./storageController.js";
 
 export const eventListeners = {
     init() {
@@ -30,8 +31,24 @@ export function addProjectClickEvent(btn) {
 
 export function addCompleteClickEvent(btn) {
     btn.addEventListener("click", () => {
-        toggleCompleteStatus(btn.dataset.taskIdBtn);
+        const header = document.getElementById("main-tab-header");
+
+        toggleCompleteStatus(btn.dataset.completeBtnId);
+
+        if (header.hasAttribute("data-project-tab")) {
+            toggleCompleteBtnText(btn);
+        } else {
+            removeTaskFromPage(btn.dataset.completeBtnId);
+        }
+
         renderSideBar();
-        removeTaskFromPage(btn.dataset.taskIdBtn);
     });
+}
+
+export function addDeleteClickEvent(btn) {
+    btn.addEventListener("click", () => {
+        deleteTaskFromStorage(btn.dataset.deleteBtnId);
+        removeTaskFromPage(btn.dataset.deleteBtnId);
+        renderSideBar();
+    })
 }

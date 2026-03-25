@@ -1,6 +1,6 @@
 // Module imports
 import { loadSideBarData, loadHomeTabData, loadTodayTabData, loadUpcomingTabData, loadCompletedTabData, loadOverdueTabData, loadProjectData } from "./dataController.js";
-import { addCompleteClickEvent, addProjectClickEvent } from "./eventsController.js";
+import { addCompleteClickEvent, addProjectClickEvent, addDeleteClickEvent } from "./eventsController.js";
 
 // Consts
 const dropDownMenuLabel = document.getElementById("dropdown-menu-label");
@@ -35,7 +35,7 @@ function renderTaskList(tasks, headerText, projectTab = null) {
         const completeDiv = document.createElement("div");
         const completeBtn = document.createElement("button");
         completeBtn.className = "complete-btn";
-        completeBtn.dataset.taskIdBtn = `${task.id}`;
+        completeBtn.dataset.completeBtnId = `${task.id}`;
         task.complete ? completeBtn.textContent = "Uncomplete" : completeBtn.textContent = "Complete";
 
         addCompleteClickEvent(completeBtn);
@@ -54,11 +54,15 @@ function renderTaskList(tasks, headerText, projectTab = null) {
 
         const editDiv = document.createElement("div");
         const editBtn = document.createElement("button");
+        editBtn.dataset.editBtnId = `${task.id}`;
         editBtn.textContent = "Edit";
 
         const deleteDiv = document.createElement("div");
         const deleteBtn = document.createElement("button");
+        deleteBtn.dataset.deleteBtnId = `${task.id}`;
         deleteBtn.textContent = "Delete";
+
+        addDeleteClickEvent(deleteBtn);
 
         completeDiv.appendChild(completeBtn);
         editDiv.appendChild(editBtn);
@@ -156,16 +160,13 @@ export function renderProjectTab(projectId) {
     renderTaskList(projectTasks, projectName, true);
 }
 
-export function removeTaskFromPage(taskId) {
-    const header = document.getElementById("main-tab-header");
+export function toggleCompleteBtnText(btn) {
+    btn.textContent === "Complete" ? btn.textContent = "Uncomplete" : btn.textContent = "Complete";
+}
 
-    if (header.hasAttribute("data-project-tab")) {
-        const btn = document.querySelector(`[data-task-id-btn="${taskId}"]`);
-        btn.textContent === "Complete" ? btn.textContent = "Uncomplete" : btn.textContent = "Complete";
-    } else {
-        const taskEl = document.querySelector(`[data-task-id="${taskId}"]`)
+export function removeTaskFromPage(taskId) {
+        const taskEl = document.querySelector(`[data-task-id="${taskId}"]`);
         taskEl.remove();
-    }
 }
 
 export const windowResize = {
