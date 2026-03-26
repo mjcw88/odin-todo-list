@@ -1,6 +1,6 @@
 // Module imports
 import { loadSideBarData, loadHomeTabData, loadTodayTabData, loadUpcomingTabData, loadCompletedTabData, loadOverdueTabData, loadProjectData } from "./dataController.js";
-import { addCompleteClickEvent, addProjectClickEvent, addDeleteClickEvent } from "./eventsController.js";
+import { addCompleteClickEvent, addProjectClickEvent, addEditClickEvent, addDeleteClickEvent } from "./eventsController.js";
 
 // Consts
 const dropDownMenuLabel = document.getElementById("dropdown-menu-label");
@@ -9,13 +9,14 @@ const projectSidebarList = document.getElementById("project-sidebar-list");
 const projectSelection = document.getElementById("project");
 const content = document.getElementById("content");
 
-function renderTaskList(tasks, headerText, projectTab = null) {
+function renderTaskList(tasks, headerText, tab, projectTab = null) {
     // Render tasks
     content.innerHTML = "";
 
     const header = document.createElement("div");
     header.className = "todo-list-header";
     header.id = "main-tab-header";
+    header.dataset.tabId = tab;
     if (projectTab) header.setAttribute("data-project-tab", "");
 
     const headerEl = document.createElement("h2");
@@ -56,6 +57,8 @@ function renderTaskList(tasks, headerText, projectTab = null) {
         const editBtn = document.createElement("button");
         editBtn.dataset.editBtnId = `${task.id}`;
         editBtn.textContent = "Edit";
+
+        addEditClickEvent(editBtn);
 
         const deleteDiv = document.createElement("div");
         const deleteBtn = document.createElement("button");
@@ -132,32 +135,32 @@ export function renderSideBar() {
 
 export function renderHomeTab() {
     const tasks = loadHomeTabData();
-    renderTaskList(tasks, "All Tasks");
+    renderTaskList(tasks, "All Tasks", "home");
 }
 
 export function renderTodayTab() {
     const tasks = loadTodayTabData();
-    renderTaskList(tasks, "Tasks Due Today");
+    renderTaskList(tasks, "Tasks Due Today", "today");
 }
 
 export function renderUpcomingTab() {
     const tasks = loadUpcomingTabData();
-    renderTaskList(tasks, "Upcoming Tasks");
+    renderTaskList(tasks, "Upcoming Tasks", "upcoming");
 }
 
 export function renderCompletedTab() {
     const tasks = loadCompletedTabData();
-    renderTaskList(tasks, "Completed Tasks");
+    renderTaskList(tasks, "Completed Tasks", "completed");
 }
 
 export function renderOverdueTab() {
     const tasks = loadOverdueTabData();
-    renderTaskList(tasks, "Overdue Tasks");
+    renderTaskList(tasks, "Overdue Tasks", "overdue");
 }
 
 export function renderProjectTab(projectId) {
     const { projectTasks, projectName } = loadProjectData(projectId);
-    renderTaskList(projectTasks, projectName, true);
+    renderTaskList(projectTasks, projectName, projectId, true);
 }
 
 export function toggleCompleteBtnText(btn) {

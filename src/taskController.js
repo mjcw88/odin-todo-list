@@ -50,7 +50,7 @@ const DEFAULT_TASKS = [
         name: "bench 2 plates",
         desc: "bench press 100kg for 5 reps",
         dueDate: defaultDates.year,
-        priority: 2,
+        priority: 1,
         project: "a1b2c3d4-0000-0000-0000-000000000000",
         complete: false,
         dateCreated: new Date(now.getTime() + 4000),
@@ -61,7 +61,7 @@ const DEFAULT_TASKS = [
         name: "squat 3 plates",
         desc: "squat 140kg for 5 reps",
         dueDate: defaultDates.year,
-        priority: 2,
+        priority: 1,
         project: "a1b2c3d4-0000-0000-0000-000000000000",
         complete: false,
         dateCreated: new Date(now.getTime() + 5000),
@@ -72,7 +72,7 @@ const DEFAULT_TASKS = [
         name: "deadlift 4 plates",
         desc: "deadlift 180kg for 5 reps",
         dueDate: defaultDates.year,
-        priority: 2,
+        priority: 1,
         project: "a1b2c3d4-0000-0000-0000-000000000000",
         complete: false,
         dateCreated: new Date(now.getTime() + 6000),
@@ -83,7 +83,7 @@ const DEFAULT_TASKS = [
         name: "complete the odin project",
         desc: "complete the odin project full stack javascript course",
         dueDate: defaultDates.sixMonths,
-        priority: 3,
+        priority: 2,
         project: "a1b2c3d4-0001-0000-0000-000000000000",
         complete: false,
         dateCreated: new Date(now.getTime() + 7000),
@@ -94,7 +94,7 @@ const DEFAULT_TASKS = [
         name: "fix fence",
         desc: "fix hole in fence to stop dog from escaping",
         dueDate: defaultDates.sixMonths,
-        priority: 1,
+        priority: 0,
         project: "a1b2c3d4-0002-0000-0000-000000000000",
         complete: true,
         dateCreated: new Date(now.getTime() + 8000),
@@ -105,7 +105,7 @@ const DEFAULT_TASKS = [
         name: "grass seed",
         desc: "lay down grass seed",
         dueDate: defaultDates.month,
-        priority: 2,
+        priority: 1,
         project: "a1b2c3d4-0002-0000-0000-000000000000",
         complete: false,
         dateCreated: new Date(now.getTime() + 9000),
@@ -116,7 +116,7 @@ const DEFAULT_TASKS = [
         name: "chop up wood",
         desc: "chop up left over wood and take to recycling centre",
         dueDate: defaultDates.month,
-        priority: 1,
+        priority: 0,
         project: "a1b2c3d4-0002-0000-0000-000000000000",
         complete: false,
         dateCreated: new Date(now.getTime() + 10000),
@@ -127,7 +127,7 @@ const DEFAULT_TASKS = [
         name: "book flights",
         desc: "book return flights for upcoming holiday",
         dueDate: defaultDates.sixMonths,
-        priority: 2,
+        priority: 1,
         project: "a1b2c3d4-0003-0000-0000-000000000000",
         complete: false,
         dateCreated: new Date(now.getTime() + 11000),
@@ -138,7 +138,7 @@ const DEFAULT_TASKS = [
         name: "book hotel",
         desc: "book hotel - max budget £100p/n",
         dueDate: defaultDates.sixMonths,
-        priority: 2,
+        priority: 1,
         project: "a1b2c3d4-0003-0000-0000-000000000000",
         complete: true,
         dateCreated: new Date(now.getTime() + 12000),
@@ -149,7 +149,7 @@ const DEFAULT_TASKS = [
         name: "take cat to vets",
         desc: "take the cat to the vets for their checkup and vaccinations",
         dueDate: defaultDates.today,
-        priority: 2,
+        priority: 1,
         project: null,
         complete: false,
         dateCreated: new Date(now.getTime() + 13000),
@@ -160,7 +160,7 @@ const DEFAULT_TASKS = [
         name: "take nan to the GP",
         desc: "take nan to the GP for her routine checkup",
         dueDate: defaultDates.weekAgo,
-        priority: 3,
+        priority: 2,
         project: null,
         complete: false,
         dateCreated: new Date(now.getTime() + 14000),
@@ -171,7 +171,7 @@ const DEFAULT_TASKS = [
         name: "fix drawer",
         desc: "fix broken screw in drawer meaning I can't open it properly",
         dueDate: defaultDates.sixMonths,
-        priority: 1,
+        priority: 0,
         project: null,
         complete: true,
         dateCreated: new Date(now.getTime() + 15000),
@@ -190,17 +190,17 @@ export const defaultTasks = {
 }
 
 // Task factory function
-function createTaskObj(name, desc, dueDate, priority, project) {
+function createTaskObj(id, name, desc, dueDate, priority, project, complete, dateCreated) {
     return {
-        id: crypto.randomUUID(),
+        id: id,
         type: "task",
         name: name,
         desc: desc,
         dueDate: dueDate,
         priority: priority,
         project: project,
-        complete: false,
-        dateCreated: new Date(),
+        complete: complete,
+        dateCreated: dateCreated,
     };
 }
 
@@ -209,10 +209,21 @@ export function createTask(data) {
     const desc = data.taskDescription;
     const dueDate = new Date(data.date);
     const priority = parseInt(data.priority);
+
     let project;
     data.project === "null" ? project = null : project = data.project;
 
-    const task = createTaskObj(name, desc, dueDate, priority, project);
+    let complete;
+    data.complete === "true" ? complete = true : complete = false;
+
+    const dateCreated = new Date(data.dateCreated);
+
+    let task;
+    if (!data.taskId) {
+        task = createTaskObj(crypto.randomUUID(), name, desc, dueDate, priority, project, false, new Date());
+    } else {
+        task = createTaskObj(data.taskId, name, desc, dueDate, priority, project, complete, dateCreated);
+    }
     saveToStorage(task);
 }
 
