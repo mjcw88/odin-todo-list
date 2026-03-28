@@ -216,14 +216,14 @@ export function createTask(data) {
     let complete;
     data.complete === "true" ? complete = true : complete = false;
 
-    const dateCreated = new Date(data.dateCreated);
+    let dateCreated;
+    data.dateCreated === "" ? dateCreated = new Date() : new Date(data.dateCreated);
 
-    let task;
-    if (!data.taskId) {
-        task = createTaskObj(crypto.randomUUID(), name, desc, dueDate, priority, project, false, new Date());
-    } else {
-        task = createTaskObj(data.taskId, name, desc, dueDate, priority, project, complete, dateCreated);
-    }
+    let id;
+    data.taskId === "" ? id = crypto.randomUUID() : id = data.taskId;
+
+    const task = createTaskObj(id, name, desc, dueDate, priority, project, complete, dateCreated);
+
     saveToStorage(task);
 }
 

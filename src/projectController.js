@@ -47,20 +47,22 @@ export const defaultProjects = {
 }
 
 // Project factory function
-function createProjectObj(name, colour) {
+function createProjectObj(id, name, colour, dateCreated) {
     return {
-        id: crypto.randomUUID(),
+        id: id,
         type: "project",
         name: name,
         colour: colour,
-        dateCreated: new Date(),
+        dateCreated: dateCreated,
     };
 }
 
 export function createProject(data) {
+    const id = crypto.randomUUID();
     const name = data.projectName;
     const colour = data.projectColour;
+    const dateCreated = new Date();
 
-    const project = createProjectObj(name, colour);
+    const project = createProjectObj(id, name, colour, dateCreated);
     saveToStorage(project);
 }

@@ -82,16 +82,14 @@ export function addProjectClickEvent(btn) {
     });
 }
 
-export function addCompleteClickEvent(btn) {
-    btn.addEventListener("click", () => {
+export function addCompleteChangeEvent(checkBox) {
+    checkBox.addEventListener("change", () => {
         const header = document.getElementById("main-tab-header");
 
-        toggleCompleteStatus(btn.dataset.completeBtnId);
+        toggleCompleteStatus(checkBox.dataset.completeId);
 
-        if (header.hasAttribute("data-project-tab")) {
-            toggleCompleteBtnText(btn);
-        } else {
-            removeTaskFromPage(btn.dataset.completeBtnId);
+        if (header.dataset.projectTab === "false" && header.dataset.tabId !== "home") {
+            removeTaskFromPage(checkBox.dataset.completeId);
         }
 
         renderSideBar();
@@ -100,8 +98,8 @@ export function addCompleteClickEvent(btn) {
 
 export function addDeleteClickEvent(btn) {
     btn.addEventListener("click", () => {
-        deleteTaskFromStorage(btn.dataset.deleteBtnId);
-        removeTaskFromPage(btn.dataset.deleteBtnId);
+        deleteTaskFromStorage(btn.dataset.deleteId);
+        removeTaskFromPage(btn.dataset.deleteId);
         renderSideBar();
     });
 }

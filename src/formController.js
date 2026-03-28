@@ -61,26 +61,18 @@ export function submitForm(form) {
 }
 
 export function renderEditTaskFormData(btn, newTaskFormDialog) {
-    const form = newTaskFormDialog.querySelector("form");
-    const editTaskName = document.getElementById("taskName");
-    const editTaskDesc = document.getElementById("taskDescription");
-    const editDate = document.getElementById("date");
-    const editPriority = document.getElementById("priority");
-    const editProject = document.getElementById("project");
-    const saveBtn = document.getElementById("add-task-btn");
-    const header = document.getElementById("add-task-form-header");
-
     const task = fetchItem(btn.dataset.editBtnId);
 
+    const form = newTaskFormDialog.querySelector("form");
     form.taskId.value = `${btn.dataset.editBtnId}`;
     form.complete.value = task.complete;
     form.dateCreated.value = task.dateCreated;
 
-    editTaskName.value = task.name;
-    editTaskDesc.value = task.desc;
-    editDate.value = new Date(task.dueDate).toISOString().split("T")[0];
-    editPriority.value = task.priority;
-    editProject.value = task.project;
-    saveBtn.textContent = "Save";
-    header.textContent = "Edit Task";
+    document.getElementById("taskName").value = task.name;
+    document.getElementById("taskDescription").value = task.desc;
+    document.getElementById("date").value = new Date(task.dueDate).toISOString().split("T")[0];
+    document.getElementById("priority").value = task.priority;
+    document.getElementById("project").value = task.project;
+    document.getElementById("add-task-btn").textContent = "Save";
+    document.getElementById("add-task-form-header").textContent = "Edit Task";
 }

@@ -37,7 +37,7 @@ function sortTasksByDueDate(tasks) {
 export function loadSideBarData() {
     const { tasks, projects } = fetchData();
 
-    let homeCount = 0;
+    const homeCount = tasks.length;
     let todayCount = 0;
     let upcomingCount = 0;
     let overdueCount = 0;
@@ -46,12 +46,11 @@ export function loadSideBarData() {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
+
     tasks.forEach(task => {
         if (task.complete) {
             completedCount++;
             return;
-        } else if (!task.complete) {
-            homeCount++;
         }
 
         if (task.dueDate.toDateString() === today.toDateString()) {
@@ -81,11 +80,9 @@ export function loadSideBarData() {
 export function loadHomeTabData() {
     const { tasks, projects } = fetchData();
 
-    const dueTasks = tasks.filter((task) => task.complete === false);
+    sortTasksByDueDate(tasks);
 
-    sortTasksByDueDate(dueTasks);
-
-    return assignProjectsToTasks(dueTasks, projects);
+    return assignProjectsToTasks(tasks, projects);
 }
 
 export function loadTodayTabData() {

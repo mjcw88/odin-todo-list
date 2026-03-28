@@ -1,6 +1,6 @@
 // Module imports
 import { loadSideBarData, loadHomeTabData, loadTodayTabData, loadUpcomingTabData, loadCompletedTabData, loadOverdueTabData, loadProjectData } from "./dataController.js";
-import { addCompleteClickEvent, addProjectClickEvent, addEditClickEvent, addDeleteClickEvent } from "./eventsController.js";
+import { addCompleteChangeEvent, addProjectClickEvent, addEditClickEvent, addDeleteClickEvent } from "./eventsController.js";
 
 // Consts
 const dropDownMenuLabel = document.getElementById("dropdown-menu-label");
@@ -9,75 +9,114 @@ const projectSidebarList = document.getElementById("project-sidebar-list");
 const projectSelection = document.getElementById("project");
 const content = document.getElementById("content");
 
-function renderTaskList(tasks, headerText, tab, projectTab = null) {
-    // Render tasks
+function renderEmptyTable() {
+    const div = document.createElement("div");
+    div.textContent = "Empty!";
+    div.className = "empty-tasks";
+    content.appendChild(div);
+}
+
+function renderTaskList(tasks, headerText, tab, isProjectTab = false) {
     content.innerHTML = "";
 
     const header = document.createElement("div");
-    header.className = "todo-list-header";
+    header.className = "todo-table-header";
     header.id = "main-tab-header";
     header.dataset.tabId = tab;
-    if (projectTab) header.setAttribute("data-project-tab", "");
+    header.setAttribute("data-project-tab", isProjectTab);
 
     const headerEl = document.createElement("h2");
     headerEl.textContent = `${headerText}`;
 
-    const ul = document.createElement("ul");
-    ul.className = "todo-list-container";
+    header.append(headerEl);
+    content.appendChild(header);
+
+    if (tasks.length === 0) {
+        renderEmptyTable();
+        return;
+    }
+
+    const table = document.createElement("table");
+    table.id = "todo-table-container";
+
+    const tr = document.createElement("tr");
+    tr.className = "todo-container";
+
+    const completeTh = document.createElement("th");
+    completeTh.textContent = "Complete";
+
+    const taskTh = document.createElement("th");
+    taskTh.textContent = "Task";
+
+    const dueDateTh = document.createElement("th");
+    dueDateTh.textContent = "Due Date";
+
+    const priorityTh = document.createElement("th");
+    priorityTh.textContent = "Priority";
+
+    const editTh = document.createElement("th");
+    editTh.textContent = "Edit";
+
+    const deleteTh = document.createElement("th");
+    deleteTh.textContent = "Delete";
+
+    tr.append(completeTh, taskTh, dueDateTh, priorityTh, editTh, deleteTh)
+    table.append(tr);
 
     tasks.forEach(task => {
-        const li = document.createElement("li");
-        li.className = "todo-container";
-        li.dataset.taskId = `${task.id}`;
+        const tr = document.createElement("tr");
+        tr.className = "todo-container";
+        tr.dataset.taskId = `${task.id}`;
 
-        const todoContainerLeft = document.createElement("div");
-        todoContainerLeft.className = "todo-container-left";
+        const completeTd = document.createElement("td");
+        const completeCheckBox = document.createElement("input");
+        completeCheckBox.type = "checkbox";
+        completeCheckBox.dataset.completeId = `${task.id}`;
+        if (task.complete) completeCheckBox.checked = true;
 
-        const completeDiv = document.createElement("div");
-        const completeBtn = document.createElement("button");
-        completeBtn.className = "complete-btn";
-        completeBtn.dataset.completeBtnId = `${task.id}`;
-        task.complete ? completeBtn.textContent = "Uncomplete" : completeBtn.textContent = "Complete";
+        addCompleteChangeEvent(completeCheckBox);
 
-        addCompleteClickEvent(completeBtn);
+        const titleTd = document.createElement("td");
+        titleTd.textContent = task.name;
 
-        const titleDiv = document.createElement("div");
-        titleDiv.textContent = task.name;
+        const dateTd = document.createElement("td");
+        dateTd.textContent = task.dueDate;
 
-        const projectDiv = document.createElement("div");
-        if (task.projectName) projectDiv.textContent = task.projectName;
+        const priorityTd = document.createElement("td");
 
-        const todoContainerRight = document.createElement("div");
-        todoContainerRight.className = "todo-container-right";
+        let priorityText;
+        if (task.priority === 0) {
+            priorityText = "Low";
+        } else if (task.priority === 1) {
+            priorityText = "Medium";
+        } else {
+            priorityText = "High";
+        }
 
-        const date = document.createElement("div");
-        date.textContent = task.dueDate;
+        priorityTd.textContent = priorityText;
 
-        const editDiv = document.createElement("div");
+        const editTd = document.createElement("td");
         const editBtn = document.createElement("button");
         editBtn.dataset.editBtnId = `${task.id}`;
         editBtn.textContent = "Edit";
 
         addEditClickEvent(editBtn);
 
-        const deleteDiv = document.createElement("div");
+        const deleteTd = document.createElement("td");
         const deleteBtn = document.createElement("button");
-        deleteBtn.dataset.deleteBtnId = `${task.id}`;
+        deleteBtn.dataset.deleteId = `${task.id}`;
         deleteBtn.textContent = "Delete";
 
         addDeleteClickEvent(deleteBtn);
 
-        completeDiv.appendChild(completeBtn);
-        editDiv.appendChild(editBtn);
-        deleteDiv.appendChild(deleteBtn);
-        todoContainerLeft.append(completeDiv, titleDiv, projectDiv);
-        todoContainerRight.append(date, editDiv, deleteDiv);
-        li.append(todoContainerLeft, todoContainerRight);
-        ul.appendChild(li);
+        completeTd.appendChild(completeCheckBox);
+        editTd.appendChild(editBtn);
+        deleteTd.appendChild(deleteBtn);
+        tr.append(completeTd, titleTd, dateTd, priorityTd, editTd, deleteTd);
+        table.appendChild(tr);
     })
 
-    header.append(headerEl);
-    content.append(header, ul);
+    content.appendChild(table);
 }
 
 // Functions
@@ -135,41 +174,54 @@ export function renderSideBar() {
 
 export function renderHomeTab() {
     const tasks = loadHomeTabData();
-    renderTaskList(tasks, "All Tasks", "home");
+    const headerText = "All Tasks";
+    const tabId = "home";
+    renderTaskList(tasks, headerText, tabId);
 }
 
 export function renderTodayTab() {
     const tasks = loadTodayTabData();
-    renderTaskList(tasks, "Tasks Due Today", "today");
+    const headerText = "Tasks Due Today";
+    const tabId = "today";
+    renderTaskList(tasks, headerText, tabId);
 }
 
 export function renderUpcomingTab() {
     const tasks = loadUpcomingTabData();
-    renderTaskList(tasks, "Upcoming Tasks", "upcoming");
+    const headerText = "Upcoming Tasks";
+    const tabId = "upcoming";
+    renderTaskList(tasks, headerText, tabId);
 }
 
 export function renderCompletedTab() {
     const tasks = loadCompletedTabData();
-    renderTaskList(tasks, "Completed Tasks", "completed");
+    const headerText = "Completed Tasks";
+    const tabId = "completed";
+    renderTaskList(tasks, headerText, tabId);
 }
 
 export function renderOverdueTab() {
     const tasks = loadOverdueTabData();
-    renderTaskList(tasks, "Overdue Tasks", "overdue");
+    const headerText = "Overdue Tasks";
+    const tabId = "overdue";
+    renderTaskList(tasks, headerText, tabId);
 }
 
 export function renderProjectTab(projectId) {
     const { projectTasks, projectName } = loadProjectData(projectId);
-    renderTaskList(projectTasks, projectName, projectId, true);
-}
-
-export function toggleCompleteBtnText(btn) {
-    btn.textContent === "Complete" ? btn.textContent = "Uncomplete" : btn.textContent = "Complete";
+    const isProjecTab = true;
+    renderTaskList(projectTasks, projectName, projectId, isProjecTab);
 }
 
 export function removeTaskFromPage(taskId) {
-        const taskEl = document.querySelector(`[data-task-id="${taskId}"]`);
-        taskEl.remove();
+    const taskEl = document.querySelector(`[data-task-id="${taskId}"]`);
+    taskEl.remove();
+
+    const tasks = document.querySelectorAll('[data-task-id]');
+    if (tasks.length === 0) {
+        document.getElementById("todo-table-container").remove();
+        renderEmptyTable();
+    }
 }
 
 export const windowResize = {
