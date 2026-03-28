@@ -48,6 +48,12 @@ function renderTaskList(tasks, headerText, tab, isProjectTab = false) {
     const taskTh = document.createElement("th");
     taskTh.textContent = "Task";
 
+    let projectTh;
+    if (!isProjectTab) {
+        projectTh = document.createElement("th");
+        projectTh.textContent = "Project";
+    }
+
     const dueDateTh = document.createElement("th");
     dueDateTh.textContent = "Due Date";
 
@@ -60,7 +66,7 @@ function renderTaskList(tasks, headerText, tab, isProjectTab = false) {
     const deleteTh = document.createElement("th");
     deleteTh.textContent = "Delete";
 
-    tr.append(completeTh, taskTh, dueDateTh, priorityTh, editTh, deleteTh)
+    tr.append(completeTh, taskTh, ...(projectTh ? [projectTh] : []), dueDateTh, priorityTh, editTh, deleteTh);
     table.append(tr);
 
     tasks.forEach(task => {
@@ -78,6 +84,12 @@ function renderTaskList(tasks, headerText, tab, isProjectTab = false) {
 
         const titleTd = document.createElement("td");
         titleTd.textContent = task.name;
+
+        let projectTd;
+        if (!isProjectTab) {
+            projectTd = document.createElement("td");
+            projectTd.textContent = task.projectName;
+        }
 
         const dateTd = document.createElement("td");
         dateTd.textContent = task.dueDate;
@@ -112,7 +124,7 @@ function renderTaskList(tasks, headerText, tab, isProjectTab = false) {
         completeTd.appendChild(completeCheckBox);
         editTd.appendChild(editBtn);
         deleteTd.appendChild(deleteBtn);
-        tr.append(completeTd, titleTd, dateTd, priorityTd, editTd, deleteTd);
+        tr.append(completeTd, titleTd, ...(projectTd ? [projectTd] : []), dateTd, priorityTd, editTd, deleteTd);
         table.appendChild(tr);
     })
 

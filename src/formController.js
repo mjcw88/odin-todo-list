@@ -33,30 +33,10 @@ export function submitForm(form) {
 
     renderSideBar();
 
-    const tab = document.querySelector('[data-tab-id]').dataset.tabId;
-
-    switch(tab) {
-        case "home":
-            renderHomeTab();
-            break;
-        case "today":
-            renderTodayTab();
-            break;
-        case "upcoming":
-            renderUpcomingTab();
-            break;
-        case "overdue":
-            renderOverdueTab();
-            break;
-        case "completed":
-            renderCompletedTab();
-            break;
-        default:
-        if (data.project !== "null") {
-            renderProjectTab(data.project);
-        } else {
-            renderHomeTab();
-        }
+    if (data.project !== "null") {
+        renderProjectTab(data.project);
+    } else {
+        renderHomeTab();
     }
 }
 
