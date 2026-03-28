@@ -9,9 +9,9 @@ export function renderDialogBox(dialog) {
 }
 
 export function closeForm(dialog, form) {
-    form.taskId.value = "";
-    form.complete.value = "";
-    form.dateCreated.value = "";
+    if (form?.taskId) form.taskId.value = "";
+    if (form?.complete) form.complete.value = "";
+    if (form?.dateCreated) form.dateCreated.value = "";
     dialog.close();
     form.reset();
 }
