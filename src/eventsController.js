@@ -1,4 +1,4 @@
-import { renderHomeTab, renderTodayTab, renderUpcomingTab, renderCompletedTab, renderOverdueTab, renderProjectTab, renderSideBar, removeTaskFromPage } from "./displayController.js";
+import { renderHomeTab, renderTodayTab, renderUpcomingTab, renderCompletedTab, renderOverdueTab, renderProjectTab, renderSideBar, removeTaskFromPage, renderShowMore, renderShowLess } from "./displayController.js";
 import { toggleCompleteStatus } from "./taskController.js";
 import { deleteTaskFromStorage } from "./storageController.js";
 import { renderDialogBox, closeForm, submitForm, renderEditTaskFormData } from "./formController.js";
@@ -114,4 +114,18 @@ export function addDeleteClickEvent(btn) {
         removeTaskFromPage(btn.dataset.deleteId);
         renderSideBar();
     });
+}
+
+export function addShowMoreClickEvent(btn) {
+    btn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        renderShowMore(btn.dataset.showMoreId);
+    })
+}
+
+export function addShowLessClickEvent(btn) {
+    btn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        renderShowLess(btn.dataset.showLessId);
+    })
 }

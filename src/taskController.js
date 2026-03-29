@@ -204,23 +204,15 @@ function createTaskObj(id, name, desc, dueDate, priority, project, complete, dat
 }
 
 export function createTask(data) {
+    const id = data.taskId === "" ? id = crypto.randomUUID() : id = data.taskId;
     const name = data.taskName;
     const desc = data.taskDescription;
     const dueDate = new Date(data.date);
     const priority = parseInt(data.priority);
-
-    let project;
-    data.project === "null" ? project = null : project = data.project;
-
-    let complete;
-    data.complete === "true" ? complete = true : complete = false;
-
-    let dateCreated;
-    data.dateCreated === "" ? dateCreated = new Date() : new Date(data.dateCreated);
-
-    let id;
-    data.taskId === "" ? id = crypto.randomUUID() : id = data.taskId;
-
+    const project = data.project === "null" ? project = null : project = data.project;
+    const complete = data.complete === "true" ? complete = true : complete = false;
+    const dateCreated = data.dateCreated === "" ? dateCreated = new Date() : new Date(data.dateCreated);
+    
     const task = createTaskObj(id, name, desc, dueDate, priority, project, complete, dateCreated);
 
     saveToStorage(task);

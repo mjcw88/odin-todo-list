@@ -64,5 +64,6 @@ export function createProject(data) {
     const dateCreated = new Date();
 
     const project = createProjectObj(id, name, colour, dateCreated);
+    
     saveToStorage(project);
 }

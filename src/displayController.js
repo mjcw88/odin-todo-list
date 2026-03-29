@@ -1,6 +1,7 @@
 // Module imports
 import { loadSideBarData, loadHomeTabData, loadTodayTabData, loadUpcomingTabData, loadCompletedTabData, loadOverdueTabData, loadProjectData } from "./dataController.js";
-import { addCompleteChangeEvent, addProjectClickEvent, addEditClickEvent, addDeleteClickEvent } from "./eventsController.js";
+import { addCompleteChangeEvent, addProjectClickEvent, addEditClickEvent, addDeleteClickEvent, addShowMoreClickEvent, addShowLessClickEvent } from "./eventsController.js";
+import { fetchItem } from "./storageController.js";
 
 // Consts
 const dropDownMenuLabel = document.getElementById("dropdown-menu-label");
@@ -9,11 +10,32 @@ const projectSidebarList = document.getElementById("project-sidebar-list");
 const projectSelection = document.getElementById("project");
 const content = document.getElementById("content");
 
+
 function renderEmptyTable() {
     const div = document.createElement("div");
     div.textContent = "Empty!";
     div.className = "empty-tasks";
     content.appendChild(div);
+}
+
+function renderTaskDesc(taskDesc, id, desc) {
+    if (desc.length > 125) {
+        taskDesc.textContent = desc.slice(0, 125) + "…";
+
+        const showMoreDiv = document.createElement("div");
+
+        const showMoreBtn = document.createElement("button");
+        showMoreBtn.className = "show-more-btn";
+        showMoreBtn.dataset.showMoreId = id;
+        showMoreBtn.textContent = "Show More";
+
+        addShowMoreClickEvent(showMoreBtn);
+
+        showMoreDiv.append(showMoreBtn);
+        taskDesc.append(showMoreDiv);
+    } else {
+        taskDesc.textContent = desc;
+    }
 }
 
 function renderTaskList(tasks, headerText, tab, isProjectTab = false) {
@@ -26,7 +48,7 @@ function renderTaskList(tasks, headerText, tab, isProjectTab = false) {
     header.setAttribute("data-project-tab", isProjectTab);
 
     const headerEl = document.createElement("h2");
-    headerEl.textContent = `${headerText}`;
+    headerEl.textContent = headerText;
 
     header.append(headerEl);
     content.appendChild(header);
@@ -42,14 +64,14 @@ function renderTaskList(tasks, headerText, tab, isProjectTab = false) {
     tasks.forEach(task => {
         const li = document.createElement("li");
         li.className = "todo-container";
-        li.dataset.taskId = `${task.id}`;
+        li.dataset.taskId = task.id;
 
         addEditClickEvent(li);
 
         const completeDiv = document.createElement("div");
         const completeCheckBox = document.createElement("input");
         completeCheckBox.type = "checkbox";
-        completeCheckBox.dataset.completeId = `${task.id}`;
+        completeCheckBox.dataset.completeId = task.id;
         if (task.complete) completeCheckBox.checked = true;
 
         addCompleteChangeEvent(completeCheckBox);
@@ -60,47 +82,43 @@ function renderTaskList(tasks, headerText, tab, isProjectTab = false) {
         taskName.textContent = task.name;
 
         const taskDesc = document.createElement("div");
-        taskDesc.textContent = task.desc;
-
+        taskDesc.dataset.taskDesc = task.id;
+        renderTaskDesc(taskDesc, task.id, task.desc);
+    
+        const taskDateAndProject = document.createElement("div");
         const taskDate = document.createElement("div");
         taskDate.textContent = task.dueDate;
 
-        const projectDiv = document.createElement("div");
-        projectDiv.textContent = task.projectName;        
+        const taskProject = document.createElement("div");
+        if (task.projectName) taskProject.textContent = task.projectName;
 
         const deleteDiv = document.createElement("div");
         const deleteBtn = document.createElement("button");
-        deleteBtn.dataset.deleteId = `${task.id}`;
+        deleteBtn.dataset.deleteId = task.id;
         deleteBtn.textContent = "Delete";
 
         addDeleteClickEvent(deleteBtn);
 
         completeDiv.appendChild(completeCheckBox);
-        taskDiv.append(taskName, taskDesc, taskDate);
+        taskDateAndProject.append(taskDate, taskProject);
+        taskDiv.append(taskName, taskDesc, taskDateAndProject);
         deleteDiv.appendChild(deleteBtn);
-        li.append(completeDiv, taskDiv, projectDiv, deleteDiv);
+        li.append(completeDiv, taskDiv, deleteDiv);
         ul.appendChild(li);
     })
 
     content.appendChild(ul);
 }
 
-// Functions
 export function renderSideBar() {
     const info = loadSideBarData();
 
     // Renders task counts on main buttons
-    const homeCount = document.getElementById("home-count");
-    const todayCount = document.getElementById("today-count");
-    const upcomingCount = document.getElementById("upcoming-count");
-    const completedCount = document.getElementById("completed-count");
-    const overdueCount = document.getElementById("overdue-count");
-    
-    homeCount.textContent = `(${info.homeCount})`;
-    todayCount.textContent = `(${info.todayCount})`;
-    upcomingCount.textContent = `(${info.upcomingCount})`;
-    completedCount.textContent = `(${info.completedCount})`;
-    overdueCount.textContent = `(${info.overdueCount})`;
+    document.getElementById("home-count").textContent = `(${info.homeCount})`;
+    document.getElementById("today-count").textContent = `(${info.todayCount})`;
+    document.getElementById("upcoming-count").textContent = `(${info.upcomingCount})`;
+    document.getElementById("completed-count").textContent = `(${info.completedCount})`;
+    document.getElementById("overdue-count").textContent = `(${info.overdueCount})`;
 
     // Renders projects
     projectSidebarList.innerHTML = "";
@@ -188,6 +206,30 @@ export function removeTaskFromPage(taskId) {
         document.getElementById("todo-list-container").remove();
         renderEmptyTable();
     }
+}
+
+export function renderShowMore(taskId) {
+    const task = fetchItem(taskId);
+    const descEl = document.querySelector(`[data-task-desc="${taskId}"]`);
+    descEl.textContent = task.desc;
+
+    const showLessDiv = document.createElement("div");
+
+    const showLessBtn = document.createElement("button");
+    showLessBtn.className = "show-less-btn";
+    showLessBtn.dataset.showLessId = task.id;
+    showLessBtn.textContent = "Show Less";
+
+    addShowLessClickEvent(showLessBtn);
+
+    showLessDiv.append(showLessBtn);
+    descEl.append(showLessDiv);
+}
+
+export function renderShowLess(taskId) {
+    const task = fetchItem(taskId);
+    const descEl = document.querySelector(`[data-task-desc="${taskId}"]`);
+    renderTaskDesc(descEl, task.id, task.desc);
 }
 
 export const windowResize = {
