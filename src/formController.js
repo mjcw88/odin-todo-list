@@ -1,7 +1,7 @@
 // Module imports
 import { createTask } from "./taskController.js";
 import { createProject } from "./projectController.js"
-import { renderSideBar, renderHomeTab, renderProjectTab, renderTodayTab, renderUpcomingTab, renderOverdueTab, renderCompletedTab } from "./displayController.js";
+import { renderSideBar, renderHomeTab, renderProjectTab } from "./displayController.js";
 import { fetchItem } from "./storageController.js";
 
 export function renderDialogBox(dialog) {
@@ -40,11 +40,11 @@ export function submitForm(form) {
     }
 }
 
-export function renderEditTaskFormData(btn, newTaskFormDialog) {
-    const task = fetchItem(btn.dataset.editBtnId);
-
+export function renderEditTaskFormData(li, newTaskFormDialog) {
+    const task = fetchItem(li.dataset.taskId);
     const form = newTaskFormDialog.querySelector("form");
-    form.taskId.value = `${btn.dataset.editBtnId}`;
+
+    form.taskId.value = task.id;
     form.complete.value = task.complete;
     form.dateCreated.value = task.dateCreated;
 

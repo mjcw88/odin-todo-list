@@ -217,7 +217,7 @@ header {
 }
 
 #content,
-#todo-table-container {
+#todo-list-container {
     display: flex;
     flex-direction: column;
     gap: 1rem;
@@ -225,24 +225,9 @@ header {
 
 .todo-container {
     display: flex;
+    justify-content: space-between;
     border: 1px solid black;
     cursor: pointer;
-}
-
-.todo-container-left,
-.todo-container-right {
-    display: flex;
-    gap: 1rem;
-}
-
-.todo-table-header {
-    text-align: center;
-}
-
-#todo-table-container > tr > * {
-    display: flex;
-    justify-content: center;
-    flex: 1;
 }
 
 .task-container-header {
@@ -306,7 +291,7 @@ header {
         width: 100%;
     }
 
-    #todo-table-container {
+    #todo-list-container {
         width: min(100%, 1200px);
     }
 

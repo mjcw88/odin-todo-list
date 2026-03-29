@@ -43,9 +43,10 @@
                                         <div class="priority-row">
                                             <label for="priority">Priority</label>
                                             <select id="priority" name="priority">
-                                                <option value="0">Low</option>
-                                                <option value="1" selected>Medium</option>
-                                                <option value="2">High</option>
+                                                <option value="0">None</option>
+                                                <option value="1">Low</option>
+                                                <option value="2" selected>Medium</option>
+                                                <option value="3">High</option>
                                             </select>
                                         </div>
                                     </div>
@@ -115,6 +116,7 @@
                                     <div class="project-form-row">
                                         <label for="projectColour">Colour</label>
                                         <select id="projectColour" name="projectColour">
+                                            <option value ="">Default</option>
                                             <option value="#000000">Black</option>
                                             <option value="#FFFFFF">White</option>
                                             <option value="#808080">Grey</option>
@@ -145,37 +147,6 @@
     <div class="main-body-container">
         <div id="content">
         </div>
-        <dialog id="task-dialog-container">
-            <div class="task-dialog">
-                <div class="task-container-header">
-                    <div>
-                        <button id="task-dialog-container-close">X</button>    
-                    </div>
-                </div>
-                <div id="task-dialog-main-body">
-                    <div>
-                        <div><input type="checkbox" id="task-dialog-complete-checkbox"></div>
-                    </div>
-                    <div>
-                        <div id="task-dialog-task"></div>
-                        <div id="task-dialog-desc"></div>
-                    </div>
-                    <div>
-                        <div>
-                            <div>Project</div>
-                            <div id="task-dialog-project"></div>
-                        <div>
-                            <div>Due Date</div>
-                            <div id="task-dialog-due-date"></div>
-                        </div>
-                        <div>
-                            <div>Priority</div>
-                            <div id="task-dialog-priority"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </dialog>
     </div>
 </body>
 </html>

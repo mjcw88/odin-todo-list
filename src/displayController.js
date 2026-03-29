@@ -1,7 +1,6 @@
 // Module imports
 import { loadSideBarData, loadHomeTabData, loadTodayTabData, loadUpcomingTabData, loadCompletedTabData, loadOverdueTabData, loadProjectData } from "./dataController.js";
-import { addTaskClickEvent, addCompleteChangeEvent, addProjectClickEvent, addEditClickEvent, addDeleteClickEvent } from "./eventsController.js";
-import { fetchItem } from "./storageController.js";
+import { addCompleteChangeEvent, addProjectClickEvent, addEditClickEvent, addDeleteClickEvent } from "./eventsController.js";
 
 // Consts
 const dropDownMenuLabel = document.getElementById("dropdown-menu-label");
@@ -15,15 +14,6 @@ function renderEmptyTable() {
     div.textContent = "Empty!";
     div.className = "empty-tasks";
     content.appendChild(div);
-}
-
-function getPriorityText(priority) {
-    if (priority === 0) {
-        return "Low";
-    } else if (priority === 1) {
-        return "Medium";
-    }
-    return "High";
 }
 
 function renderTaskList(tasks, headerText, tab, isProjectTab = false) {
@@ -46,47 +36,17 @@ function renderTaskList(tasks, headerText, tab, isProjectTab = false) {
         return;
     }
 
-    const table = document.createElement("table");
-    table.id = "todo-table-container";
-
-    const tr = document.createElement("tr");
-    tr.className = "todo-container";
-
-    const completeTh = document.createElement("th");
-    completeTh.textContent = "Complete";
-
-    const taskTh = document.createElement("th");
-    taskTh.textContent = "Task";
-
-    let projectTh;
-    if (!isProjectTab) {
-        projectTh = document.createElement("th");
-        projectTh.textContent = "Project";
-    }
-
-    const dueDateTh = document.createElement("th");
-    dueDateTh.textContent = "Due Date";
-
-    const priorityTh = document.createElement("th");
-    priorityTh.textContent = "Priority";
-
-    const editTh = document.createElement("th");
-    editTh.textContent = "Edit";
-
-    const deleteTh = document.createElement("th");
-    deleteTh.textContent = "Delete";
-
-    tr.append(completeTh, taskTh, ...(projectTh ? [projectTh] : []), dueDateTh, priorityTh, editTh, deleteTh);
-    table.append(tr);
+    const ul = document.createElement("ul");
+    ul.id = "todo-list-container";
 
     tasks.forEach(task => {
-        const tr = document.createElement("tr");
-        tr.className = "todo-container";
-        tr.dataset.taskId = `${task.id}`;
+        const li = document.createElement("li");
+        li.className = "todo-container";
+        li.dataset.taskId = `${task.id}`;
 
-        addTaskClickEvent(tr);
+        addEditClickEvent(li);
 
-        const completeTd = document.createElement("td");
+        const completeDiv = document.createElement("div");
         const completeCheckBox = document.createElement("input");
         completeCheckBox.type = "checkbox";
         completeCheckBox.dataset.completeId = `${task.id}`;
@@ -94,44 +54,35 @@ function renderTaskList(tasks, headerText, tab, isProjectTab = false) {
 
         addCompleteChangeEvent(completeCheckBox);
 
-        const titleTd = document.createElement("td");
-        titleTd.textContent = task.name;
+        const taskDiv = document.createElement("div");
 
-        let projectTd;
-        if (!isProjectTab) {
-            projectTd = document.createElement("td");
-            projectTd.textContent = task.projectName;
-        }
+        const taskName = document.createElement("div");
+        taskName.textContent = task.name;
 
-        const dateTd = document.createElement("td");
-        dateTd.textContent = task.dueDate;
+        const taskDesc = document.createElement("div");
+        taskDesc.textContent = task.desc;
 
-        const priorityTd = document.createElement("td");
-        const priorityText = getPriorityText(task.priority);
-        priorityTd.textContent = priorityText;
+        const taskDate = document.createElement("div");
+        taskDate.textContent = task.dueDate;
 
-        const editTd = document.createElement("td");
-        const editBtn = document.createElement("button");
-        editBtn.dataset.editBtnId = `${task.id}`;
-        editBtn.textContent = "Edit";
+        const projectDiv = document.createElement("div");
+        projectDiv.textContent = task.projectName;        
 
-        addEditClickEvent(editBtn);
-
-        const deleteTd = document.createElement("td");
+        const deleteDiv = document.createElement("div");
         const deleteBtn = document.createElement("button");
         deleteBtn.dataset.deleteId = `${task.id}`;
         deleteBtn.textContent = "Delete";
 
         addDeleteClickEvent(deleteBtn);
 
-        completeTd.appendChild(completeCheckBox);
-        editTd.appendChild(editBtn);
-        deleteTd.appendChild(deleteBtn);
-        tr.append(completeTd, titleTd, ...(projectTd ? [projectTd] : []), dateTd, priorityTd, editTd, deleteTd);
-        table.appendChild(tr);
+        completeDiv.appendChild(completeCheckBox);
+        taskDiv.append(taskName, taskDesc, taskDate);
+        deleteDiv.appendChild(deleteBtn);
+        li.append(completeDiv, taskDiv, projectDiv, deleteDiv);
+        ul.appendChild(li);
     })
 
-    content.appendChild(table);
+    content.appendChild(ul);
 }
 
 // Functions
@@ -234,30 +185,9 @@ export function removeTaskFromPage(taskId) {
 
     const tasks = document.querySelectorAll('[data-task-id]');
     if (tasks.length === 0) {
-        document.getElementById("todo-table-container").remove();
+        document.getElementById("todo-list-container").remove();
         renderEmptyTable();
     }
-}
-
-export function renderTaskDialogData(task) {
-    const taskData = fetchItem(task.dataset.taskId);
-
-    let projectData;
-    if (taskData.project) projectData = fetchItem(taskData.project);
-
-    let projectName;
-    projectData ? projectName = projectData.name : projectName = "";
-
-    const priorityText = getPriorityText(taskData.priority);
-
-    const checkBox = document.getElementById("task-dialog-complete-checkbox");
-    taskData.complete ? checkBox.checked = true : checkBox.checked = false;
-
-    document.getElementById("task-dialog-task").textContent = taskData.name;
-    document.getElementById("task-dialog-desc").textContent = taskData.desc;
-    document.getElementById("task-dialog-project").textContent = projectName;
-    document.getElementById("task-dialog-due-date").textContent = new Date(taskData.dueDate).toLocaleDateString();
-    document.getElementById("task-dialog-priority").textContent = priorityText;
 }
 
 export const windowResize = {
