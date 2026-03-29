@@ -155,7 +155,8 @@ header {
 }
 
 #new-task-form,
-#new-project-form {
+#new-project-form,
+#task-dialog-container {
     position: fixed;
     top: 50%;
     left: 50%;
@@ -225,6 +226,7 @@ header {
 .todo-container {
     display: flex;
     border: 1px solid black;
+    cursor: pointer;
 }
 
 .todo-container-left,
@@ -241,6 +243,16 @@ header {
     display: flex;
     justify-content: center;
     flex: 1;
+}
+
+.task-container-header {
+    display: flex;
+    justify-content: flex-end;
+}
+
+#task-dialog-main-body {
+    display: flex;
+    justify-content: space-between;
 }
 
 @media only screen and (min-width: 768px) {

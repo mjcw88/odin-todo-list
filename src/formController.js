@@ -8,12 +8,12 @@ export function renderDialogBox(dialog) {
     dialog.showModal();
 }
 
-export function closeForm(dialog, form) {
+export function closeForm(dialog, form = null) {
     if (form?.taskId) form.taskId.value = "";
     if (form?.complete) form.complete.value = "";
     if (form?.dateCreated) form.dateCreated.value = "";
+    if (form) form.reset();
     dialog.close();
-    form.reset();
 }
 
 export function submitForm(form) {

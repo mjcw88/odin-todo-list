@@ -1,4 +1,4 @@
-import { renderHomeTab, renderTodayTab, renderUpcomingTab, renderCompletedTab, renderOverdueTab, renderProjectTab, renderSideBar, toggleCompleteBtnText, removeTaskFromPage } from "./displayController.js";
+import { renderHomeTab, renderTodayTab, renderUpcomingTab, renderCompletedTab, renderOverdueTab, renderProjectTab, renderSideBar, removeTaskFromPage, renderTaskDialogData } from "./displayController.js";
 import { toggleCompleteStatus } from "./taskController.js";
 import { deleteTaskFromStorage } from "./storageController.js";
 import { renderDialogBox, closeForm, submitForm, renderEditTaskFormData } from "./formController.js";
@@ -25,6 +25,10 @@ export const eventListeners = {
         const newProjectFormDialog = document.getElementById("new-project-form");
         const newProjectForm = newProjectFormDialog.querySelector("form");
         const closeNewProjectForm = document.getElementById("close-new-project-form-btn");
+
+        // Full Task Container consts
+        const taskDialogContainer = document.getElementById("task-dialog-container");
+        const closeTask = document.getElementById("task-dialog-container-close");
 
         homeBtn.addEventListener("click", renderHomeTab);
         todayBtn.addEventListener("click", renderTodayTab);
@@ -73,12 +77,25 @@ export const eventListeners = {
             submitForm(newProjectForm);
             closeForm(newProjectFormDialog, newProjectForm);
         });
+
+        closeTask.addEventListener("click", () => {
+            closeForm(taskDialogContainer)
+        })
     }
 }
 
 export function addProjectClickEvent(btn) {
     btn.addEventListener("click", () => {
         renderProjectTab(btn.dataset.projectId)
+    });
+}
+
+export function addTaskClickEvent(task) {
+    task.addEventListener("click", (e) => {
+        if (e.target.closest("button, input")) return;
+        const dialog = document.getElementById("task-dialog-container");
+        renderDialogBox(dialog);
+        renderTaskDialogData(task);
     });
 }
 

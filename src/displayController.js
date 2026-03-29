@@ -1,6 +1,7 @@
 // Module imports
 import { loadSideBarData, loadHomeTabData, loadTodayTabData, loadUpcomingTabData, loadCompletedTabData, loadOverdueTabData, loadProjectData } from "./dataController.js";
-import { addCompleteChangeEvent, addProjectClickEvent, addEditClickEvent, addDeleteClickEvent } from "./eventsController.js";
+import { addTaskClickEvent, addCompleteChangeEvent, addProjectClickEvent, addEditClickEvent, addDeleteClickEvent } from "./eventsController.js";
+import { fetchItem } from "./storageController.js";
 
 // Consts
 const dropDownMenuLabel = document.getElementById("dropdown-menu-label");
@@ -14,6 +15,15 @@ function renderEmptyTable() {
     div.textContent = "Empty!";
     div.className = "empty-tasks";
     content.appendChild(div);
+}
+
+function getPriorityText(priority) {
+    if (priority === 0) {
+        return "Low";
+    } else if (priority === 1) {
+        return "Medium";
+    }
+    return "High";
 }
 
 function renderTaskList(tasks, headerText, tab, isProjectTab = false) {
@@ -74,6 +84,8 @@ function renderTaskList(tasks, headerText, tab, isProjectTab = false) {
         tr.className = "todo-container";
         tr.dataset.taskId = `${task.id}`;
 
+        addTaskClickEvent(tr);
+
         const completeTd = document.createElement("td");
         const completeCheckBox = document.createElement("input");
         completeCheckBox.type = "checkbox";
@@ -95,16 +107,7 @@ function renderTaskList(tasks, headerText, tab, isProjectTab = false) {
         dateTd.textContent = task.dueDate;
 
         const priorityTd = document.createElement("td");
-
-        let priorityText;
-        if (task.priority === 0) {
-            priorityText = "Low";
-        } else if (task.priority === 1) {
-            priorityText = "Medium";
-        } else {
-            priorityText = "High";
-        }
-
+        const priorityText = getPriorityText(task.priority);
         priorityTd.textContent = priorityText;
 
         const editTd = document.createElement("td");
@@ -234,6 +237,27 @@ export function removeTaskFromPage(taskId) {
         document.getElementById("todo-table-container").remove();
         renderEmptyTable();
     }
+}
+
+export function renderTaskDialogData(task) {
+    const taskData = fetchItem(task.dataset.taskId);
+
+    let projectData;
+    if (taskData.project) projectData = fetchItem(taskData.project);
+
+    let projectName;
+    projectData ? projectName = projectData.name : projectName = "";
+
+    const priorityText = getPriorityText(taskData.priority);
+
+    const checkBox = document.getElementById("task-dialog-complete-checkbox");
+    taskData.complete ? checkBox.checked = true : checkBox.checked = false;
+
+    document.getElementById("task-dialog-task").textContent = taskData.name;
+    document.getElementById("task-dialog-desc").textContent = taskData.desc;
+    document.getElementById("task-dialog-project").textContent = projectName;
+    document.getElementById("task-dialog-due-date").textContent = new Date(taskData.dueDate).toLocaleDateString();
+    document.getElementById("task-dialog-priority").textContent = priorityText;
 }
 
 export const windowResize = {

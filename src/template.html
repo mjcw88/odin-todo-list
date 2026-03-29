@@ -33,7 +33,7 @@
                                         <input type="text" id="taskName" name="taskName" maxlength="50" placeholder="Task" required>
                                     </div>
                                     <div class="form-row">
-                                        <textarea id="taskDescription" name="taskDescription" maxlength="5000" placeholder="Description"></textarea>
+                                        <textarea id="taskDescription" name="taskDescription" maxlength="2500" placeholder="Description"></textarea>
                                     </div>
                                     <div class="form-row">
                                         <div class="date-row">
@@ -145,6 +145,37 @@
     <div class="main-body-container">
         <div id="content">
         </div>
+        <dialog id="task-dialog-container">
+            <div class="task-dialog">
+                <div class="task-container-header">
+                    <div>
+                        <button id="task-dialog-container-close">X</button>    
+                    </div>
+                </div>
+                <div id="task-dialog-main-body">
+                    <div>
+                        <div><input type="checkbox" id="task-dialog-complete-checkbox"></div>
+                    </div>
+                    <div>
+                        <div id="task-dialog-task"></div>
+                        <div id="task-dialog-desc"></div>
+                    </div>
+                    <div>
+                        <div>
+                            <div>Project</div>
+                            <div id="task-dialog-project"></div>
+                        <div>
+                            <div>Due Date</div>
+                            <div id="task-dialog-due-date"></div>
+                        </div>
+                        <div>
+                            <div>Priority</div>
+                            <div id="task-dialog-priority"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </dialog>
     </div>
 </body>
 </html>
