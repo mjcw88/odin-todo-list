@@ -281,7 +281,7 @@ export function renderDeleteText(id, isProjectTab) {
     textBox.appendChild(strong);
 
     if (isProjectTab) {
-        textBox.appendChild(document.createTextNode(" project will be permanently deleted. This will also delete all associated tasks"));
+        textBox.appendChild(document.createTextNode(" project will be permanently deleted. This will also delete all associated tasks."));
     } else {
         textBox.appendChild(document.createTextNode(" task will be permanently deleted."));
     }
