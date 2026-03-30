@@ -1,4 +1,4 @@
-import { renderHomeTab, renderTodayTab, renderUpcomingTab, renderCompletedTab, renderOverdueTab, renderProjectTab, renderSideBar, removeTaskFromPage, renderShowMore, renderShowLess } from "./displayController.js";
+import { renderHomeTab, renderTodayTab, renderUpcomingTab, renderCompletedTab, renderOverdueTab, renderProjectTab, renderSideBar, removeTaskFromPage, renderShowMore, renderShowLess, renderDeleteText } from "./displayController.js";
 import { toggleCompleteStatus } from "./taskController.js";
 import { deleteTaskFromStorage } from "./storageController.js";
 import { renderDialogBox, closeForm, submitForm, renderEditTaskFormData } from "./formController.js";
@@ -25,6 +25,11 @@ export const eventListeners = {
         const newProjectFormDialog = document.getElementById("new-project-form");
         const newProjectForm = newProjectFormDialog.querySelector("form");
         const closeNewProjectForm = document.getElementById("close-new-project-form-btn");
+
+        // Delete Tasks consts
+        const deleteDialog = document.getElementById("delete-dialog-box");
+        const cancelDeleteTask = document.getElementById("cancel-delete-task");
+        const confirmDeleteTask = document.getElementById("confirm-delete-task");
 
         homeBtn.addEventListener("click", renderHomeTab);
         todayBtn.addEventListener("click", renderTodayTab);
@@ -73,6 +78,18 @@ export const eventListeners = {
             submitForm(newProjectForm);
             closeForm(newProjectFormDialog, newProjectForm);
         });
+
+        // Delete Tasks Event Listeners
+        cancelDeleteTask.addEventListener("click", () => {
+            closeForm(deleteDialog);
+        });
+
+        confirmDeleteTask.addEventListener("click", () => {
+            deleteTaskFromStorage(confirmDeleteTask.dataset.deleteId);
+            removeTaskFromPage(confirmDeleteTask.dataset.deleteId);
+            renderSideBar();
+            closeForm(deleteDialog);
+        });
     }
 }
 
@@ -110,9 +127,14 @@ export function addCompleteChangeEvent(checkBox) {
 export function addDeleteClickEvent(btn) {
     btn.addEventListener("click", (e) => {
         e.stopPropagation();
-        deleteTaskFromStorage(btn.dataset.deleteId);
-        removeTaskFromPage(btn.dataset.deleteId);
-        renderSideBar();
+
+        const dialogBox = document.getElementById("delete-dialog-box");
+        renderDialogBox(dialogBox);
+
+        renderDeleteText(btn.dataset.deleteId);
+
+        const confirmDeleteTask = document.getElementById("confirm-delete-task");
+        confirmDeleteTask.dataset.deleteId = btn.dataset.deleteId;
     });
 }
 

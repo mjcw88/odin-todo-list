@@ -232,6 +232,19 @@ export function renderShowLess(taskId) {
     renderTaskDesc(descEl, task.id, task.desc);
 }
 
+export function renderDeleteText(taskId) {
+    const task = fetchItem(taskId);
+    const el = document.getElementById("delete-task-textbox");
+    
+    el.textContent = "The ";
+    
+    const strong = document.createElement("strong");
+    strong.textContent = task.name;
+    
+    el.appendChild(strong);
+    el.appendChild(document.createTextNode(" task will be permanently deleted."));
+}
+
 export const windowResize = {
     init() {
         let resizeTimer;

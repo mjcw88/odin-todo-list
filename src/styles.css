@@ -156,7 +156,7 @@ header {
 
 #new-task-form,
 #new-project-form,
-#task-dialog-container {
+#delete-dialog-box {
     position: fixed;
     top: 50%;
     left: 50%;

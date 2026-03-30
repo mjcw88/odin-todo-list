@@ -24,7 +24,8 @@ function assignProjectsToTasks(tasks, projects) {
             const project = projects.find(({ id }) => id === task.project);
             task.projectName = project?.name;
         }
-        task.dueDate = task.dueDate.toLocaleDateString();
+
+        task.dueDate = getDate(task.dueDate);
     });
 
     return tasks;
@@ -32,6 +33,15 @@ function assignProjectsToTasks(tasks, projects) {
 
 function sortTasksByDueDate(tasks) {
     return tasks.sort((a, b) => a.dueDate - b.dueDate);
+}
+
+function getDate(taskDueDate) {
+    const date = new Date(taskDueDate);
+    const day = date.getDate();
+    const month = date.toLocaleString("en-GB", { month: "short" });
+    const year = date.getFullYear();
+
+    return `${day} ${month} ${year}`;
 }
 
 export function loadSideBarData() {
@@ -142,7 +152,7 @@ export function loadProjectData(projectId) {
     sortTasksByDueDate(projectTasks);
 
     projectTasks.forEach(task => {
-        task.dueDate = task.dueDate.toLocaleDateString();
+        task.dueDate = getDate(task.dueDate);
     });
 
     const project = projects.find((project) => project.id === projectId);
