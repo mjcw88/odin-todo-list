@@ -145,6 +145,15 @@
         </aside>
     </div>
     <header>
+        <select id="sort-by">
+            <option value="" disabled selected>Sort by</option>
+            <option value="complete">Complete</option>
+            <option value="dueDate">Due Date</option>
+            <option value="priority">Priority</option>
+            <option value="project">Project</option>
+            <option value="task">Task</option>
+        </select>
+        <button id="sort-by-order-btn" data-sort-by-order="asc">↑</button>
     </header>
     <div class="main-body-container">
         <div id="content">

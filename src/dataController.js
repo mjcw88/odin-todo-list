@@ -32,7 +32,15 @@ function assignProjectsToTasks(tasks, projects) {
 }
 
 function sortTasksByDueDate(tasks) {
-    return tasks.sort((a, b) => a.dueDate - b.dueDate);
+    tasks.sort((a, b) => {
+        const aVal = new Date(a.dueDate).getTime();
+        const bVal = new Date(b.dueDate).getTime();
+        if (aVal !== bVal) {
+            return aVal - bVal;
+        }
+        return a.name.localeCompare(b.name);
+    });
+    return tasks;
 }
 
 function getDate(taskDueDate) {

@@ -38,6 +38,12 @@ function renderTaskDesc(taskDesc, id, desc) {
 }
 
 function renderTaskList(tasks, headerText, tab, isProjectTab = false) {
+    document.getElementById("sort-by").value = "";
+
+    const sortByOrderBtn = document.getElementById("sort-by-order-btn");
+    sortByOrderBtn.textContent = "↑";
+    sortByOrderBtn.dataset.sortByOrder = "asc";
+
     content.innerHTML = "";
 
     const header = document.createElement("div");
@@ -88,11 +94,14 @@ function renderTaskList(tasks, headerText, tab, isProjectTab = false) {
         const li = document.createElement("li");
         li.className = "todo-container";
         li.dataset.taskId = task.id;
+        li.dataset.dueDate = new Date(task.dueDate);
+        li.dataset.priority = task.priority;
 
         addEditTaskClickEvent(li);
 
         const completeDiv = document.createElement("div");
         const completeCheckBox = document.createElement("input");
+        completeCheckBox.className = "todo-list-complete";
         completeCheckBox.type = "checkbox";
         completeCheckBox.dataset.completeId = task.id;
         if (task.complete) completeCheckBox.checked = true;
@@ -102,6 +111,7 @@ function renderTaskList(tasks, headerText, tab, isProjectTab = false) {
         const taskDiv = document.createElement("div");
 
         const taskName = document.createElement("div");
+        taskName.className = "todo-list-task-name";
         taskName.textContent = task.name;
 
         const taskDesc = document.createElement("div");
@@ -113,6 +123,7 @@ function renderTaskList(tasks, headerText, tab, isProjectTab = false) {
         taskDate.textContent = task.dueDate;
 
         const taskProject = document.createElement("div");
+        taskProject.className = "todo-list-project-name";
         if (task.projectName) taskProject.textContent = task.projectName;
 
         const deleteDiv = document.createElement("div");
@@ -274,6 +285,87 @@ export function renderDeleteText(id, isProjectTab) {
     } else {
         textBox.appendChild(document.createTextNode(" task will be permanently deleted."));
     }
+}
+
+export function sortTaskList(sortBy, orderBy) {
+    const toDoList = document.getElementById("todo-list-container");
+    const listItems = Array.from(toDoList.querySelectorAll("li"));
+
+    let comparator;
+
+    switch(sortBy) {
+        case "complete":
+            comparator = (a, b) => {
+                let aVal = a.querySelector(".todo-list-complete").checked;
+                let bVal = b.querySelector(".todo-list-complete").checked;
+
+                if (aVal !== bVal) {
+                    return aVal - bVal;
+                }
+
+                aVal = a.querySelector(".todo-list-task-name").textContent;
+                bVal = b.querySelector(".todo-list-task-name").textContent;
+                return aVal.localeCompare(bVal);
+            };
+            break;
+        case "dueDate":
+            comparator = (a, b) => {
+                let aVal = new Date(a.dataset.dueDate).getTime();
+                let bVal = new Date(b.dataset.dueDate).getTime();
+
+                if (aVal !== bVal) {
+                    return aVal - bVal;
+                }
+
+                aVal = a.querySelector(".todo-list-task-name").textContent;
+                bVal = b.querySelector(".todo-list-task-name").textContent;
+                return aVal.localeCompare(bVal);
+            };
+            break;
+        case "priority":
+            comparator = (a, b) => {
+                let aVal = parseInt(a.dataset.priority);
+                let bVal = parseInt(b.dataset.priority);
+
+                if (aVal !== bVal) {
+                    return aVal - bVal;
+                }
+
+                aVal = a.querySelector(".todo-list-task-name").textContent;
+                bVal = b.querySelector(".todo-list-task-name").textContent;
+                return aVal.localeCompare(bVal);
+            }
+            break;
+        case "project":
+            comparator = (a, b) => {
+                let aVal = a.querySelector(".todo-list-project-name").textContent;
+                let bVal = b.querySelector(".todo-list-project-name").textContent;
+
+                if (aVal !== bVal) {
+                    return aVal.localeCompare(bVal);
+                }
+
+                aVal = a.querySelector(".todo-list-task-name").textContent;
+                bVal = b.querySelector(".todo-list-task-name").textContent;
+                return aVal.localeCompare(bVal);
+            };
+            break;
+        default:
+            comparator = (a, b) => {
+                const aVal = a.querySelector(".todo-list-task-name").textContent;
+                const bVal = b.querySelector(".todo-list-task-name").textContent;
+                return aVal.localeCompare(bVal);
+            };
+            break;
+    }
+
+    listItems.sort(comparator);
+
+    if (orderBy === "desc") listItems.reverse();
+
+    toDoList.innerHTML = "";
+
+    toDoList.append(...listItems);
 }
 
 export const windowResize = {

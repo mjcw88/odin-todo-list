@@ -1,4 +1,4 @@
-import { renderHomeTab, renderTodayTab, renderUpcomingTab, renderCompletedTab, renderOverdueTab, renderProjectTab, renderSideBar, removeTaskFromPage, renderShowMore, renderShowLess, renderDeleteText } from "./displayController.js";
+import { renderHomeTab, renderTodayTab, renderUpcomingTab, renderCompletedTab, renderOverdueTab, renderProjectTab, renderSideBar, removeTaskFromPage, renderShowMore, renderShowLess, renderDeleteText, sortTaskList } from "./displayController.js";
 import { toggleCompleteStatus } from "./taskController.js";
 import { deleteTaskFromStorage, deleteProjectFromStorage } from "./storageController.js";
 import { renderDialogBox, closeForm, submitForm, renderEditTaskFormData, renderEditProjectFormData } from "./formController.js";
@@ -27,8 +27,12 @@ export const eventListeners = {
 
         // Delete consts
         const deleteDialog = document.getElementById("delete-dialog-box");
-        const cancelDeleteTask = document.getElementById("cancel-delete");
+        const cancelDelete = document.getElementById("cancel-delete");
         const confirmDelete = document.getElementById("confirm-delete");
+
+        // Sort By consts
+        const sortBy = document.getElementById("sort-by");
+        const sortbyOrderBtn = document.getElementById("sort-by-order-btn");
 
         homeBtn.addEventListener("click", renderHomeTab);
         todayBtn.addEventListener("click", renderTodayTab);
@@ -75,7 +79,7 @@ export const eventListeners = {
         });
 
         // Delete Tasks Event Listeners
-        cancelDeleteTask.addEventListener("click", () => {
+        cancelDelete.addEventListener("click", () => {
             closeForm(deleteDialog);
         });
 
@@ -93,6 +97,25 @@ export const eventListeners = {
             renderSideBar();
             closeForm(deleteDialog);
         });
+
+        // Sort By Event Listeners
+        sortBy.addEventListener("change", () => {
+            sortTaskList(sortBy.value, sortbyOrderBtn.dataset.sortByOrder);
+        })
+
+        sortbyOrderBtn.addEventListener("click", () => {
+            if (sortbyOrderBtn.dataset.sortByOrder === "asc") {
+                sortbyOrderBtn.textContent = "↓";
+                sortbyOrderBtn.dataset.sortByOrder = "desc"
+            } else {
+                sortbyOrderBtn.textContent = "↑";
+                sortbyOrderBtn.dataset.sortByOrder = "asc"
+            }
+
+            if (sortBy.value === "") return;
+
+            sortTaskList(sortBy.value, sortbyOrderBtn.dataset.sortByOrder);
+        })
     }
 }
 
@@ -163,3 +186,4 @@ export function addShowLessClickEvent(btn) {
         renderShowLess(btn.dataset.showLessId);
     })
 }
+
