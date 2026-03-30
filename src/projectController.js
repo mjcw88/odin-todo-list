@@ -59,11 +59,13 @@ function createProjectObj(id, name, colour, dateCreated) {
 
 export function createProject(data) {
     const id = data.projectId === "" ? crypto.randomUUID() : data.projectId;
-    const name = data.projectName;
+    const name = data.projectName.trim();
     const colour = data.projectColour === "null" ? null : data.projectColour;
     const dateCreated = data.dateCreated === "" ? new Date() : new Date(data.dateCreated);
 
     const project = createProjectObj(id, name, colour, dateCreated);
     
     saveToStorage(project);
+
+    return project;
 }

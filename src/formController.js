@@ -25,17 +25,29 @@ export function submitForm(form) {
 
     const formData = new FormData(form);
     const data = Object.fromEntries(formData.entries());
+    const name = (data.taskName || data.projectName).trim();
 
+    if (!name) {
+        alert("Name cannot be blank");
+        return;
+    }
+
+    let project;
     if (data.formType === "newTask") {
         createTask(data);
     } else {
-        createProject(data);
+        project = createProject(data);
     }
 
     renderSideBar();
 
-    if (data.project !== "null") {
-        renderProjectTab(data.projectId);
+
+
+    if (data.formType === "newProject") {
+        renderProjectTab(project.id);
+    } else if (data.project !== "null") {
+        console.log(data);
+        renderProjectTab(data.project);
     } else {
         renderHomeTab();
     }

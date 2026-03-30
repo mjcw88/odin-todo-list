@@ -205,7 +205,7 @@ function createTaskObj(id, name, desc, dueDate, priority, project, complete, dat
 
 export function createTask(data) {
     const id = data.taskId === "" ? crypto.randomUUID() : data.taskId;
-    const name = data.taskName;
+    const name = data.taskName.trim();
     const desc = data.taskDescription;
     const dueDate = new Date(data.date);
     const priority = parseInt(data.priority);

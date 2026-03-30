@@ -164,6 +164,7 @@ export function loadProjectData(projectId) {
     });
 
     const project = projects.find((project) => project.id === projectId);
+
     const projectName = project.name;
 
     return { projectTasks, projectName };
