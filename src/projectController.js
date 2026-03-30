@@ -30,7 +30,7 @@ const DEFAULT_PROJECTS = [
         id: "a1b2c3d4-0003-0000-0000-000000000000",
         type: "project",
         name: "Holiday",
-        colour: "#F77908",
+        colour: null,
         dateCreated: new Date(now.getTime() + 3000),
     },
 ]
@@ -58,10 +58,10 @@ function createProjectObj(id, name, colour, dateCreated) {
 }
 
 export function createProject(data) {
-    const id = crypto.randomUUID();
+    const id = data.projectId === "" ? crypto.randomUUID() : data.projectId;
     const name = data.projectName;
-    const colour = data.projectColour;
-    const dateCreated = new Date();
+    const colour = data.projectColour === "null" ? null : data.projectColour;
+    const dateCreated = data.dateCreated === "" ? new Date() : new Date(data.dateCreated);
 
     const project = createProjectObj(id, name, colour, dateCreated);
     

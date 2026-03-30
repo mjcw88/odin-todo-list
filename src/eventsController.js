@@ -1,7 +1,7 @@
 import { renderHomeTab, renderTodayTab, renderUpcomingTab, renderCompletedTab, renderOverdueTab, renderProjectTab, renderSideBar, removeTaskFromPage, renderShowMore, renderShowLess, renderDeleteText } from "./displayController.js";
 import { toggleCompleteStatus } from "./taskController.js";
 import { deleteTaskFromStorage } from "./storageController.js";
-import { renderDialogBox, closeForm, submitForm, renderEditTaskFormData } from "./formController.js";
+import { renderDialogBox, closeForm, submitForm, renderEditTaskFormData, renderEditProjectFormData } from "./formController.js";
 
 export const eventListeners = {
     init() {
@@ -11,7 +11,6 @@ export const eventListeners = {
         const upcomingBtn = document.getElementById("upcoming-btn");
         const completedBtn = document.getElementById("completed-btn");
         const overdueBtn = document.getElementById("overdue-btn");
-        const projectBtns = document.querySelectorAll('[data-project-id]');
 
         // New Task consts
         const newTaskBtn = document.getElementById("open-new-task-btn");
@@ -26,20 +25,16 @@ export const eventListeners = {
         const newProjectForm = newProjectFormDialog.querySelector("form");
         const closeNewProjectForm = document.getElementById("close-new-project-form-btn");
 
-        // Delete Tasks consts
+        // Delete consts
         const deleteDialog = document.getElementById("delete-dialog-box");
-        const cancelDeleteTask = document.getElementById("cancel-delete-task");
-        const confirmDeleteTask = document.getElementById("confirm-delete-task");
+        const cancelDeleteTask = document.getElementById("cancel-delete");
+        const confirmDeleteTask = document.getElementById("confirm-delete");
 
         homeBtn.addEventListener("click", renderHomeTab);
         todayBtn.addEventListener("click", renderTodayTab);
         upcomingBtn.addEventListener("click", renderUpcomingTab);
         completedBtn.addEventListener("click", renderCompletedTab);
         overdueBtn.addEventListener("click", renderOverdueTab);
-
-        projectBtns.forEach(btn => {
-            addProjectClickEvent(btn);
-        });
 
         // New Task Event Listeners
         newTaskBtn.addEventListener("click", () => {
@@ -95,11 +90,19 @@ export const eventListeners = {
 
 export function addProjectClickEvent(btn) {
     btn.addEventListener("click", () => {
-        renderProjectTab(btn.dataset.projectId)
+        renderProjectTab(btn.dataset.projectId);
     });
 }
 
-export function addEditClickEvent(li) {
+export function addEditProjectClickEvent(header, projectId) {
+    header.addEventListener("click", () => {
+        const newProjectFormDialog = document.getElementById("new-project-form");
+        renderEditProjectFormData(projectId, newProjectFormDialog);
+        renderDialogBox(newProjectFormDialog);
+    });
+}
+
+export function addEditTaskClickEvent(li) {
     li.addEventListener("click", (e) => {
         if (e.target.closest("button, input")) return;
         e.stopPropagation();
@@ -133,7 +136,7 @@ export function addDeleteClickEvent(btn) {
 
         renderDeleteText(btn.dataset.deleteId);
 
-        const confirmDeleteTask = document.getElementById("confirm-delete-task");
+        const confirmDeleteTask = document.getElementById("confirm-delete");
         confirmDeleteTask.dataset.deleteId = btn.dataset.deleteId;
     });
 }

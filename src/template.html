@@ -109,6 +109,8 @@
                             <div class="new-project-main-body">
                                 <form>
                                     <input type="hidden" name="formType" value="newProject">
+                                    <input type="hidden" name="projectId" value="">
+                                    <input type="hidden" name="dateCreated" value="">
                                     <div class="project-form-row">
                                         <label for="project-name">Project Name</label>
                                         <input type="text" id="projectName" name="projectName" maxlength="50" placeholder="Project Name" required>
@@ -116,7 +118,7 @@
                                     <div class="project-form-row">
                                         <label for="projectColour">Colour</label>
                                         <select id="projectColour" name="projectColour">
-                                            <option value ="">Default</option>
+                                            <option value="null">Default</option>
                                             <option value="#000000">Black</option>
                                             <option value="#FFFFFF">White</option>
                                             <option value="#808080">Grey</option>
@@ -149,10 +151,10 @@
         </div>
         <dialog id="delete-dialog-box">
             <div>Delete Task?</div>
-            <div id="delete-task-textbox"></div>
+            <div id="delete-textbox"></div>
             <div>
-                <button id="cancel-delete-task">Cancel</button>
-                <button id="confirm-delete-task">Delete</button>
+                <button id="cancel-delete">Cancel</button>
+                <button id="confirm-delete">Delete</button>
             </div>
         </dialog>
     </div>

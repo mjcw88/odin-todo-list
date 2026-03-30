@@ -216,6 +216,10 @@ header {
     padding: var(--padding);
 }
 
+.project-name {
+    cursor: pointer;
+}
+
 #content,
 #todo-list-container {
     display: flex;

@@ -1,6 +1,6 @@
 // Module imports
 import { loadSideBarData, loadHomeTabData, loadTodayTabData, loadUpcomingTabData, loadCompletedTabData, loadOverdueTabData, loadProjectData } from "./dataController.js";
-import { addCompleteChangeEvent, addProjectClickEvent, addEditClickEvent, addDeleteClickEvent, addShowMoreClickEvent, addShowLessClickEvent } from "./eventsController.js";
+import { addCompleteChangeEvent, addProjectClickEvent, addEditProjectClickEvent, addEditTaskClickEvent, addDeleteClickEvent, addShowMoreClickEvent, addShowLessClickEvent } from "./eventsController.js";
 import { fetchItem } from "./storageController.js";
 
 // Consts
@@ -9,7 +9,6 @@ const dropDownMenuCheckBox = document.getElementById("dropdown-menu-checkbox");
 const projectSidebarList = document.getElementById("project-sidebar-list");
 const projectSelection = document.getElementById("project");
 const content = document.getElementById("content");
-
 
 function renderEmptyTable() {
     const div = document.createElement("div");
@@ -47,8 +46,11 @@ function renderTaskList(tasks, headerText, tab, isProjectTab = false) {
     header.dataset.tabId = tab;
     header.setAttribute("data-project-tab", isProjectTab);
 
+    if (isProjectTab) addEditProjectClickEvent(header, tab);
+
     const headerEl = document.createElement("h2");
     headerEl.textContent = headerText;
+    if (isProjectTab) headerEl.className = "project-name";
 
     header.append(headerEl);
     content.appendChild(header);
@@ -66,7 +68,7 @@ function renderTaskList(tasks, headerText, tab, isProjectTab = false) {
         li.className = "todo-container";
         li.dataset.taskId = task.id;
 
-        addEditClickEvent(li);
+        addEditTaskClickEvent(li);
 
         const completeDiv = document.createElement("div");
         const completeCheckBox = document.createElement("input");
@@ -234,7 +236,7 @@ export function renderShowLess(taskId) {
 
 export function renderDeleteText(taskId) {
     const task = fetchItem(taskId);
-    const el = document.getElementById("delete-task-textbox");
+    const el = document.getElementById("delete-textbox");
     
     el.textContent = "The ";
     
