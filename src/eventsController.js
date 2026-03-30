@@ -1,6 +1,6 @@
 import { renderHomeTab, renderTodayTab, renderUpcomingTab, renderCompletedTab, renderOverdueTab, renderProjectTab, renderSideBar, removeTaskFromPage, renderShowMore, renderShowLess, renderDeleteText } from "./displayController.js";
 import { toggleCompleteStatus } from "./taskController.js";
-import { deleteTaskFromStorage } from "./storageController.js";
+import { deleteTaskFromStorage, deleteProjectFromStorage } from "./storageController.js";
 import { renderDialogBox, closeForm, submitForm, renderEditTaskFormData, renderEditProjectFormData } from "./formController.js";
 
 export const eventListeners = {
@@ -28,7 +28,7 @@ export const eventListeners = {
         // Delete consts
         const deleteDialog = document.getElementById("delete-dialog-box");
         const cancelDeleteTask = document.getElementById("cancel-delete");
-        const confirmDeleteTask = document.getElementById("confirm-delete");
+        const confirmDelete = document.getElementById("confirm-delete");
 
         homeBtn.addEventListener("click", renderHomeTab);
         todayBtn.addEventListener("click", renderTodayTab);
@@ -38,12 +38,9 @@ export const eventListeners = {
 
         // New Task Event Listeners
         newTaskBtn.addEventListener("click", () => {
-            const saveBtn = document.getElementById("add-task-btn");
-            const header = document.getElementById("add-task-form-header");
+            document.getElementById("add-task-btn").textContent = "Add";
+            document.getElementById("add-task-form-header").textContent = "Add Task";
 
-            saveBtn.textContent = "Add";
-            header.textContent = "Add Task";
-            
             date.value = new Date().toISOString().split("T")[0];
 
             renderDialogBox(newTaskFormDialog);
@@ -61,6 +58,9 @@ export const eventListeners = {
 
         // New Project Event Listeners
         newProjectBtn.addEventListener("click", () => {
+            document.getElementById("add-project-btn").textContent = "Add";
+            document.getElementById("add-project-form-header").textContent = "Add Project";
+
             renderDialogBox(newProjectFormDialog);
         });
 
@@ -79,9 +79,17 @@ export const eventListeners = {
             closeForm(deleteDialog);
         });
 
-        confirmDeleteTask.addEventListener("click", () => {
-            deleteTaskFromStorage(confirmDeleteTask.dataset.deleteId);
-            removeTaskFromPage(confirmDeleteTask.dataset.deleteId);
+        confirmDelete.addEventListener("click", () => {
+            const isProjectTab = confirmDelete.dataset.isProjectTab === "true" ? true : false;
+
+            if (isProjectTab) {
+                deleteProjectFromStorage(confirmDelete.dataset.deleteId);
+                renderHomeTab();
+            } else {
+                deleteTaskFromStorage(confirmDelete.dataset.deleteId);
+                removeTaskFromPage(confirmDelete.dataset.deleteId);
+            }
+
             renderSideBar();
             closeForm(deleteDialog);
         });
@@ -127,17 +135,18 @@ export function addCompleteChangeEvent(checkBox) {
     });
 }
 
-export function addDeleteClickEvent(btn) {
+export function addDeleteClickEvent(btn, isProjectTab = false) {
     btn.addEventListener("click", (e) => {
         e.stopPropagation();
 
         const dialogBox = document.getElementById("delete-dialog-box");
         renderDialogBox(dialogBox);
 
-        renderDeleteText(btn.dataset.deleteId);
+        renderDeleteText(btn.dataset.deleteId, isProjectTab);
 
-        const confirmDeleteTask = document.getElementById("confirm-delete");
-        confirmDeleteTask.dataset.deleteId = btn.dataset.deleteId;
+        const confirmDelete = document.getElementById("confirm-delete");
+        confirmDelete.dataset.deleteId = btn.dataset.deleteId;
+        confirmDelete.dataset.isProjectTab = isProjectTab;
     });
 }
 

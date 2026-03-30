@@ -67,4 +67,6 @@ export function renderEditProjectFormData(projectId, newProjectFormDialog) {
 
     document.getElementById("projectName").value = project.name;
     document.getElementById("projectColour").value = project.colour;
+    document.getElementById("add-project-btn").textContent = "Save";
+    document.getElementById("add-project-form-header").textContent = "Edit Project";
 }

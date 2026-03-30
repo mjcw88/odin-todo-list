@@ -54,3 +54,19 @@ export function deleteTaskFromStorage(id) {
         console.error("localStorage unavailable");
     }
 }
+
+export function deleteProjectFromStorage(id) {
+    if (storageAvailable("localStorage")) {
+        localStorage.removeItem(id);
+        
+        Object.keys(localStorage).forEach(key => {
+            const item = JSON.parse(localStorage.getItem(key))
+
+            if (item.type === "task" && item.project === id) {
+                localStorage.removeItem(item.id);
+            }
+        })
+    } else {
+        console.error("localStorage unavailable");
+    }
+}

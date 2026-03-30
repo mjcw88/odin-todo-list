@@ -46,13 +46,34 @@ function renderTaskList(tasks, headerText, tab, isProjectTab = false) {
     header.dataset.tabId = tab;
     header.setAttribute("data-project-tab", isProjectTab);
 
-    if (isProjectTab) addEditProjectClickEvent(header, tab);
-
     const headerEl = document.createElement("h2");
     headerEl.textContent = headerText;
-    if (isProjectTab) headerEl.className = "project-name";
-
     header.append(headerEl);
+    
+    if (isProjectTab) {
+        headerEl.className = "project-name";
+
+        const btnDiv = document.createElement("div");
+
+        const editDiv = document.createElement("div");
+        const editBtn = document.createElement("button");
+        editBtn.textContent = "Edit";
+
+        addEditProjectClickEvent(editBtn, tab);
+
+        const deleteDiv = document.createElement("div");
+        const deleteBtn = document.createElement("button");
+        deleteBtn.dataset.deleteId = tab;
+        deleteBtn.textContent = "Delete";
+
+        addDeleteClickEvent(deleteBtn, isProjectTab);
+
+        editDiv.appendChild(editBtn);
+        deleteDiv.appendChild(deleteBtn);
+        btnDiv.append(editDiv, deleteDiv);
+        header.append(btnDiv);
+    }
+
     content.appendChild(header);
 
     if (tasks.length === 0) {
@@ -234,17 +255,25 @@ export function renderShowLess(taskId) {
     renderTaskDesc(descEl, task.id, task.desc);
 }
 
-export function renderDeleteText(taskId) {
-    const task = fetchItem(taskId);
-    const el = document.getElementById("delete-textbox");
+export function renderDeleteText(id, isProjectTab) {
+    const item = fetchItem(id);
+    const header = document.getElementById("delete-header");
+    const textBox = document.getElementById("delete-textbox");
     
-    el.textContent = "The ";
+    isProjectTab ? header.textContent = "Delete Project?" : header.textContent = "Delete Task?"
+
+    textBox.textContent = "The ";
     
     const strong = document.createElement("strong");
-    strong.textContent = task.name;
+    strong.textContent = item.name;
     
-    el.appendChild(strong);
-    el.appendChild(document.createTextNode(" task will be permanently deleted."));
+    textBox.appendChild(strong);
+
+    if (isProjectTab) {
+        textBox.appendChild(document.createTextNode(" project will be permanently deleted. This will also delete all associated tasks"));
+    } else {
+        textBox.appendChild(document.createTextNode(" task will be permanently deleted."));
+    }
 }
 
 export const windowResize = {
