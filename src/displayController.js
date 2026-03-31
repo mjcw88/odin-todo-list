@@ -38,6 +38,7 @@ function renderTaskDesc(taskDesc, id, desc) {
 }
 
 function renderTaskList(tasks, headerText, tab, isProjectTab = false) {
+    document.getElementById("dropdown-menu-checkbox").checked = false;
     document.getElementById("sort-by").value = "";
 
     const sortByOrderBtn = document.getElementById("sort-by-order-btn");
