@@ -34,11 +34,12 @@ export const eventListeners = {
         const sortBy = document.getElementById("sort-by");
         const sortbyOrderBtn = document.getElementById("sort-by-order-btn");
 
-        homeBtn.addEventListener("click", renderHomeTab);
-        todayBtn.addEventListener("click", renderTodayTab);
-        upcomingBtn.addEventListener("click", renderUpcomingTab);
-        completedBtn.addEventListener("click", renderCompletedTab);
-        overdueBtn.addEventListener("click", renderOverdueTab);
+        // Sidebar Button Event Listeners
+        homeBtn.addEventListener("click", () => renderHomeTab(homeBtn.dataset.btnId));
+        todayBtn.addEventListener("click", () => renderTodayTab(todayBtn.dataset.btnId));
+        upcomingBtn.addEventListener("click", () => renderUpcomingTab(upcomingBtn.dataset.btnId));
+        completedBtn.addEventListener("click", () => renderCompletedTab(completedBtn.dataset.btnId));
+        overdueBtn.addEventListener("click", () => renderOverdueTab(overdueBtn.dataset.btnId));
 
         // New Task Event Listeners
         newTaskBtn.addEventListener("click", () => {

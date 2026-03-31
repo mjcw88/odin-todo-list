@@ -37,14 +37,27 @@ function renderTaskDesc(taskDesc, id, desc) {
     }
 }
 
-function renderTaskList(tasks, headerText, tab, isProjectTab = false) {
+function resetSortBy() {
     document.getElementById("dropdown-menu-checkbox").checked = false;
     document.getElementById("sort-by").value = "";
 
     const sortByOrderBtn = document.getElementById("sort-by-order-btn");
     sortByOrderBtn.textContent = "↑";
     sortByOrderBtn.dataset.sortByOrder = "asc";
+}
 
+function addSelectedClass(id) {
+    const btns = document.querySelectorAll(".sidebar-btn");
+    btns.forEach(btn => {
+        if (btn.dataset.btnId === id) {
+            btn.classList.add("selected-tab");
+        } else {
+            btn.classList.remove("selected-tab");
+        }
+    });
+}
+
+function renderTaskList(tasks, headerText, tab, isProjectTab = false) {
     content.innerHTML = "";
 
     const header = document.createElement("div");
@@ -146,15 +159,24 @@ function renderTaskList(tasks, headerText, tab, isProjectTab = false) {
     content.appendChild(ul);
 }
 
+function darkenColour(colour) {
+    const darkenLevel = 0.7;
+    const hex = parseInt(colour.replace("#", ""), 16);
+    const r = Math.floor((hex >> 16) * darkenLevel);
+    const g = Math.floor(((hex >> 8) & 0xff) * darkenLevel);
+    const b = Math.floor((hex & 0xff) * darkenLevel);
+    return `rgb(${r}, ${g}, ${b})`;
+}
+
 export function renderSideBar() {
     const info = loadSideBarData();
 
     // Renders task counts on main buttons
-    document.getElementById("home-count").textContent = `(${info.homeCount})`;
-    document.getElementById("today-count").textContent = `(${info.todayCount})`;
-    document.getElementById("upcoming-count").textContent = `(${info.upcomingCount})`;
-    document.getElementById("completed-count").textContent = `(${info.completedCount})`;
-    document.getElementById("overdue-count").textContent = `(${info.overdueCount})`;
+    document.getElementById("home-count").textContent = info.homeCount;
+    document.getElementById("today-count").textContent = info.todayCount;
+    document.getElementById("upcoming-count").textContent = info.upcomingCount;
+    document.getElementById("completed-count").textContent = info.completedCount;
+    document.getElementById("overdue-count").textContent = info.overdueCount;
 
     // Renders projects
     projectSidebarList.innerHTML = "";
@@ -170,17 +192,30 @@ export function renderSideBar() {
         const li = document.createElement("li");
 
         const btn = document.createElement("button");
+        btn.className = "sidebar-btn";
         btn.dataset.projectId = project.id;
+        btn.dataset.btnId = project.id;
+
+        const projectNameContainer = document.createElement("div");
+        projectNameContainer.className = "project-name-container";
+
+        const projectColour = document.createElement("div");
+        projectColour.className = "project-colour";
+        if (!project.colour) project.colour = "transparent";
+        projectColour.style.backgroundColor = project.colour;
+        projectColour.style.border = `1px solid ${darkenColour(project.colour)}`;
 
         const projectName = document.createElement("div");
         projectName.textContent = project.name;
 
         const taskCount = document.createElement("div");
-        taskCount.textContent = `(${project.taskCount})`;
+        taskCount.className = "task-count";
+        taskCount.textContent = project.taskCount;
 
         projectSidebarList.appendChild(li);
         li.appendChild(btn);
-        btn.append(projectName, taskCount);
+        projectNameContainer.append(projectColour, projectName);
+        btn.append(projectNameContainer, taskCount);
 
         addProjectClickEvent(btn);
 
@@ -192,45 +227,57 @@ export function renderSideBar() {
     })
 }
 
-export function renderHomeTab() {
+export function renderHomeTab(id) {
     const tasks = loadHomeTabData();
     const headerText = "All Tasks";
     const tabId = "home";
+    resetSortBy();
+    addSelectedClass(id);
     renderTaskList(tasks, headerText, tabId);
 }
 
-export function renderTodayTab() {
+export function renderTodayTab(id) {
     const tasks = loadTodayTabData();
     const headerText = "Tasks Due Today";
     const tabId = "today";
+    resetSortBy();
+    addSelectedClass(id);
     renderTaskList(tasks, headerText, tabId);
 }
 
-export function renderUpcomingTab() {
+export function renderUpcomingTab(id) {
     const tasks = loadUpcomingTabData();
     const headerText = "Upcoming Tasks";
     const tabId = "upcoming";
+    resetSortBy();
+    addSelectedClass(id);
     renderTaskList(tasks, headerText, tabId);
 }
 
-export function renderCompletedTab() {
+export function renderCompletedTab(id) {
     const tasks = loadCompletedTabData();
     const headerText = "Completed Tasks";
     const tabId = "completed";
+    resetSortBy();
+    addSelectedClass(id);
     renderTaskList(tasks, headerText, tabId);
 }
 
-export function renderOverdueTab() {
+export function renderOverdueTab(id) {
     const tasks = loadOverdueTabData();
     const headerText = "Overdue Tasks";
     const tabId = "overdue";
+    resetSortBy();
+    addSelectedClass(id);
     renderTaskList(tasks, headerText, tabId);
 }
 
-export function renderProjectTab(projectId) {
-    const { projectTasks, projectName } = loadProjectData(projectId);
+export function renderProjectTab(id) {
+    const { projectTasks, projectName } = loadProjectData(id);
     const isProjecTab = true;
-    renderTaskList(projectTasks, projectName, projectId, isProjecTab);
+    resetSortBy();
+    addSelectedClass(id);
+    renderTaskList(projectTasks, projectName, id, isProjecTab);
 }
 
 export function removeTaskFromPage(taskId) {
@@ -361,7 +408,7 @@ export function sortTaskList(sortBy, orderBy) {
                 let aVal = a.querySelector(".todo-list-project-name").textContent;
                 let bVal = b.querySelector(".todo-list-project-name").textContent;
 
-                if (aVal !== bVal) return aVal - bVal;
+                if (aVal !== bVal) return aVal.localeCompare(bVal);
 
                 aVal = a.querySelector(".todo-list-task-name").textContent;
                 bVal = b.querySelector(".todo-list-task-name").textContent;
@@ -378,8 +425,8 @@ export function sortTaskList(sortBy, orderBy) {
             break;
         default:
             comparator = (a, b) => {
-                const aVal = a.querySelector(".todo-list-task-name").textContent;
-                const bVal = b.querySelector(".todo-list-task-name").textContent;
+                let aVal = a.querySelector(".todo-list-task-name").textContent;
+                let bVal = b.querySelector(".todo-list-task-name").textContent;
 
                 const nameCompare = aVal.localeCompare(bVal);
                 
