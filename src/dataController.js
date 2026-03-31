@@ -31,14 +31,18 @@ function assignProjectsToTasks(tasks, projects) {
     return tasks;
 }
 
-function sortTasksByDueDate(tasks) {
+function sortTasks(tasks) {
     tasks.sort((a, b) => {
-        const aVal = new Date(a.dueDate).getTime();
-        const bVal = new Date(b.dueDate).getTime();
-        if (aVal !== bVal) {
-            return aVal - bVal;
-        }
-        return a.name.localeCompare(b.name);
+        const aDueDate = new Date(a.dueDate).getTime();
+        const bDueDate = new Date(b.dueDate).getTime();
+
+        if (aDueDate !== bDueDate)  return aDueDate - bDueDate;
+
+        const nameCompare = a.name.localeCompare(b.name);
+
+        if (nameCompare !== 0) return nameCompare;
+
+        return a.dateCreated - b.dateCreated;
     });
     return tasks;
 }
@@ -98,7 +102,7 @@ export function loadSideBarData() {
 export function loadHomeTabData() {
     const { tasks, projects } = fetchData();
 
-    sortTasksByDueDate(tasks);
+    sortTasks(tasks);
 
     return assignProjectsToTasks(tasks, projects);
 }
@@ -111,7 +115,7 @@ export function loadTodayTabData() {
 
     const todayTasks = tasks.filter((task) => task.dueDate.toDateString() === today.toDateString() && task.complete === false);
 
-    sortTasksByDueDate(todayTasks);
+    sortTasks(todayTasks);
 
     return assignProjectsToTasks(todayTasks, projects);
 }
@@ -124,7 +128,7 @@ export function loadUpcomingTabData() {
 
     const upcomingTasks = tasks.filter((task) => task.dueDate > today && task.complete === false);
 
-    sortTasksByDueDate(upcomingTasks);
+    sortTasks(upcomingTasks);
 
     return assignProjectsToTasks(upcomingTasks, projects);
 } 
@@ -134,7 +138,7 @@ export function loadCompletedTabData() {
 
     const completedTasks = tasks.filter((task) => task.complete === true);
 
-    sortTasksByDueDate(completedTasks);
+    sortTasks(completedTasks);
 
     return assignProjectsToTasks(completedTasks, projects);
 }
@@ -147,7 +151,7 @@ export function loadOverdueTabData() {
 
     const overDueTasks = tasks.filter((task) => task.dueDate < today && task.complete == false);
 
-    sortTasksByDueDate(overDueTasks);
+    sortTasks(overDueTasks);
 
     return assignProjectsToTasks(overDueTasks, projects);
 }
@@ -157,7 +161,7 @@ export function loadProjectData(projectId) {
 
     const projectTasks = tasks.filter((task) => task.project === projectId);
 
-    sortTasksByDueDate(projectTasks);
+    sortTasks(projectTasks);
 
     projectTasks.forEach(task => {
         task.dueDate = getDate(task.dueDate);

@@ -18,8 +18,8 @@ function renderEmptyTable() {
 }
 
 function renderTaskDesc(taskDesc, id, desc) {
-    if (desc.length > 125) {
-        taskDesc.textContent = desc.slice(0, 125) + "…";
+    if (desc.length > 100) {
+        taskDesc.textContent = desc.slice(0, 100) + "…";
 
         const showMoreDiv = document.createElement("div");
 
@@ -96,6 +96,7 @@ function renderTaskList(tasks, headerText, tab, isProjectTab = false) {
         li.dataset.taskId = task.id;
         li.dataset.dueDate = new Date(task.dueDate);
         li.dataset.priority = task.priority;
+        li.dataset.dateCreated = task.dateCreated;
 
         addEditTaskClickEvent(li);
 
@@ -299,13 +300,19 @@ export function sortTaskList(sortBy, orderBy) {
                 let aVal = a.querySelector(".todo-list-complete").checked;
                 let bVal = b.querySelector(".todo-list-complete").checked;
 
-                if (aVal !== bVal) {
-                    return aVal - bVal;
-                }
+                if (aVal !== bVal) return aVal - bVal;
 
                 aVal = a.querySelector(".todo-list-task-name").textContent;
                 bVal = b.querySelector(".todo-list-task-name").textContent;
-                return aVal.localeCompare(bVal);
+
+                const nameCompare = aVal.localeCompare(bVal);
+                
+                if (nameCompare !== 0) return nameCompare;
+
+                aVal = new Date(a.dataset.dateCreated).getTime();
+                bVal = new Date(b.dataset.dateCreated).getTime();
+
+                return aVal - bVal;
             };
             break;
         case "dueDate":
@@ -313,13 +320,19 @@ export function sortTaskList(sortBy, orderBy) {
                 let aVal = new Date(a.dataset.dueDate).getTime();
                 let bVal = new Date(b.dataset.dueDate).getTime();
 
-                if (aVal !== bVal) {
-                    return aVal - bVal;
-                }
+                if (aVal !== bVal) return aVal - bVal;
 
                 aVal = a.querySelector(".todo-list-task-name").textContent;
                 bVal = b.querySelector(".todo-list-task-name").textContent;
-                return aVal.localeCompare(bVal);
+
+                const nameCompare = aVal.localeCompare(bVal);
+                
+                if (nameCompare !== 0) return nameCompare;
+
+                aVal = new Date(a.dataset.dateCreated).getTime();
+                bVal = new Date(b.dataset.dateCreated).getTime();
+
+                return aVal - bVal;
             };
             break;
         case "priority":
@@ -327,13 +340,19 @@ export function sortTaskList(sortBy, orderBy) {
                 let aVal = parseInt(a.dataset.priority);
                 let bVal = parseInt(b.dataset.priority);
 
-                if (aVal !== bVal) {
-                    return aVal - bVal;
-                }
+                if (aVal !== bVal) return aVal - bVal;
 
                 aVal = a.querySelector(".todo-list-task-name").textContent;
                 bVal = b.querySelector(".todo-list-task-name").textContent;
-                return aVal.localeCompare(bVal);
+
+                const nameCompare = aVal.localeCompare(bVal);
+                
+                if (nameCompare !== 0) return nameCompare;
+
+                aVal = new Date(a.dataset.dateCreated).getTime();
+                bVal = new Date(b.dataset.dateCreated).getTime();
+
+                return aVal - bVal;
             }
             break;
         case "project":
@@ -341,20 +360,34 @@ export function sortTaskList(sortBy, orderBy) {
                 let aVal = a.querySelector(".todo-list-project-name").textContent;
                 let bVal = b.querySelector(".todo-list-project-name").textContent;
 
-                if (aVal !== bVal) {
-                    return aVal.localeCompare(bVal);
-                }
+                if (aVal !== bVal) return aVal - bVal;
 
                 aVal = a.querySelector(".todo-list-task-name").textContent;
                 bVal = b.querySelector(".todo-list-task-name").textContent;
-                return aVal.localeCompare(bVal);
+
+                const nameCompare = aVal.localeCompare(bVal);
+                
+                if (nameCompare !== 0) return nameCompare;
+
+                aVal = new Date(a.dataset.dateCreated).getTime();
+                bVal = new Date(b.dataset.dateCreated).getTime();
+
+                return aVal - bVal;
             };
             break;
         default:
             comparator = (a, b) => {
                 const aVal = a.querySelector(".todo-list-task-name").textContent;
                 const bVal = b.querySelector(".todo-list-task-name").textContent;
-                return aVal.localeCompare(bVal);
+
+                const nameCompare = aVal.localeCompare(bVal);
+                
+                if (nameCompare !== 0) return nameCompare;
+
+                aVal = new Date(a.dataset.dateCreated).getTime();
+                bVal = new Date(b.dataset.dateCreated).getTime();
+
+                return aVal - bVal;
             };
             break;
     }

@@ -146,7 +146,7 @@ const DEFAULT_TASKS = [
         id: "a1b2c3d4-0013-0000-0000-000000000000",
         type: "task",
         name: "take cat to vets",
-        desc: "take the cat to the vets for their checkup and vaccinations",
+        desc: "take the cat to the vets for their checkup and vaccinations, remember to pick up worm and flea tablets and remember to ask about teeth",
         dueDate: defaultDates.today,
         priority: 2,
         project: null,
