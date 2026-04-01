@@ -12,6 +12,7 @@
             <input type="checkbox" id="dropdown-menu-checkbox">
         </label>
         <div class="sidebar-container">
+            <div class="sidebar-bumper"></div>
             <aside class="sidebar">
                 <div class="header-container">
                     <h2>ToDo List</h2>
@@ -26,9 +27,6 @@
                         </button>
                         <dialog id="new-task-form">
                             <div class="new-task-container">
-                                <div class="form-header">
-                                    <h2 id="add-task-form-header">Add Task</h2>
-                                </div>
                                 <div class="new-task-main-body">
                                     <form>
                                         <input type="hidden" name="formType" value="newTask">
@@ -36,7 +34,7 @@
                                         <input type="hidden" name="complete" value="">
                                         <input type="hidden" name="dateCreated" value="">
                                         <div class="form-row">
-                                            <input type="text" id="taskName" name="taskName" maxlength="50" placeholder="Task" required>
+                                            <input type="text" id="taskName" name="taskName" maxlength="50" placeholder="Take out the bins" required>
                                         </div>
                                         <div class="form-row">
                                             <textarea id="taskDescription" name="taskDescription" maxlength="2500" placeholder="Description"></textarea>
@@ -65,7 +63,7 @@
                                         </div>
                                         <div class="form-row">
                                             <button type="button" id="close-new-task-form-btn">Cancel</button>
-                                            <button type="submit" id="add-task-btn">Add</button>
+                                            <button type="submit" id="add-task-btn">Add Task</button>
                                         </div>
                                     </form>
                                 </div>
@@ -74,31 +72,31 @@
                     </li>
                     <li>
                         <button id="home-btn" class="sidebar-btn" data-btn-id="home">
-                            <div>Home</div>
+                            <div class="sidebar-project-name">Home</div>
                             <div id="home-count" class="task-count"></div>
                         </button>
                     </li>
                     <li>
                         <button id="today-btn" class="sidebar-btn" data-btn-id="today">
-                            <div>Today</div>
+                            <div class="sidebar-project-name">Today</div>
                             <div id="today-count" class="task-count"></div>
                         </button>
                     </li>
                     <li>
                         <button id="upcoming-btn" class="sidebar-btn" data-btn-id="upcoming">
-                            <div>Upcoming</div>
+                            <div class="sidebar-project-name">Upcoming</div>
                             <div id="upcoming-count" class="task-count"></div>
                         </button>
                     </li>
                     <li>
                         <button id="overdue-btn" class="sidebar-btn" data-btn-id="overdue">
-                            <div>Overdue</div>
+                            <div class="sidebar-project-name">Overdue</div>
                             <div id="overdue-count" class="task-count"></div>
                         </button>
                     </li>
                     <li>
                         <button id="completed-btn" class="sidebar-btn" data-btn-id="completed">
-                            <div>Completed</div>
+                            <div class="sidebar-project-name">Completed</div>
                             <div id="completed-count" class="task-count"></div>
                         </button>
                     </li>
@@ -113,16 +111,12 @@
                         </button>
                         <dialog id="new-project-form">
                             <div class="new-project-container">
-                                <div class="form-header">
-                                    <h2 id="add-project-form-header">Add Project</h2>
-                                </div>
                                 <div class="new-project-main-body">
                                     <form>
                                         <input type="hidden" name="formType" value="newProject">
                                         <input type="hidden" name="projectId" value="">
                                         <input type="hidden" name="dateCreated" value="">
                                         <div class="project-form-row">
-                                            <label for="project-name">Project Name</label>
                                             <input type="text" id="projectName" name="projectName" maxlength="50" placeholder="Project Name" required>
                                         </div>
                                         <div class="project-form-row">
@@ -142,7 +136,7 @@
                                         </div>
                                         <div class="form-row">
                                             <button type="button" id="close-new-project-form-btn">Cancel</button>
-                                            <button type="submit" id="add-project-btn">Add</button>
+                                            <button type="submit" id="add-project-btn">Add Project</button>
                                         </div>
                                     </form>
                                 </div>
