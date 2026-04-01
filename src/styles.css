@@ -15,7 +15,6 @@
     --animationTiming: 250ms ease-in-out;
     --hamburgerHeight: calc(var(--barHeight) * 3 + var(--hamburgerGap) * 2);
     --headerHeight: 5rem;
-    --sidebarWidth: 250px;
 }
 
 *,
@@ -38,6 +37,10 @@ body {
     font-size: 1rem;
     color: var(--black);
     line-height: 1.5;
+}
+
+.no-transition * {
+    transition: none !important;
 }
 
 button {
@@ -67,6 +70,7 @@ button:hover {
 .task-count {
     color: var(--brickRed);
     font-size: 0.875rem;
+    flex-shrink: 0;
 }
 
 #open-new-task-btn {
@@ -110,6 +114,8 @@ button:hover {
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    flex: 1;
+    min-width: 0;
 }
 
 .project-colour {
@@ -120,8 +126,13 @@ button:hover {
     height: var(--size);
 }
 
-.no-transition * {
-    transition: none !important;
+.sidebar-project-name {
+    text-align: left;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex: 1;
+    padding-right: var(--padding);
 }
 
 header {
@@ -204,6 +215,12 @@ header {
     width: 0;
 }
 
+.sidebar-bumper {
+    width: var(--hamburgerHeight);
+    height: var(--hamburgerHeight);
+    padding-bottom: 20px;
+}
+
 .sidebar-container {
     display: flex;
     flex-direction: column;
@@ -213,9 +230,7 @@ header {
     translate: -100%;
     padding: var(--padding);
     background-color: var(--cream);
-    min-width: 50%;
-    width: min-content;
-    /* max-width: var(--sidebarWidth); */
+    width: 50%;
     height: 100vh;
     transition: translate var(--animationTiming);
     z-index: 1;
@@ -223,7 +238,7 @@ header {
 
 .sidebar {
     position: relative;
-    top: min(3.75rem, 160px);
+    overflow-y: auto;
 }
 
 .dropdown-menu:has(input:checked) + .sidebar-container {
@@ -347,7 +362,7 @@ header {
 @media only screen and (min-width: 768px) {
     body {
         display: grid;
-        grid-template-columns: minmax(20rem, min-content) 9fr;
+        grid-template-columns: 20rem 9fr;
         grid-template-rows: auto 1fr;
         min-height: 100vh;
         margin: 0;

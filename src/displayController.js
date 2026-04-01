@@ -203,9 +203,10 @@ export function renderSideBar() {
         projectColour.className = "project-colour";
         if (!project.colour) project.colour = "transparent";
         projectColour.style.backgroundColor = project.colour;
-        projectColour.style.border = `1px solid ${darkenColour(project.colour)}`;
+        projectColour.style.border = `0.0625rem solid ${darkenColour(project.colour)}`;
 
         const projectName = document.createElement("div");
+        projectName.className = "sidebar-project-name";
         projectName.textContent = project.name;
 
         const taskCount = document.createElement("div");
