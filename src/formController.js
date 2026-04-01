@@ -9,12 +9,19 @@ export function renderDialogBox(dialog) {
 }
 
 export function closeForm(dialog, form = null) {
+    const DIALOG_BOX_TIMING = 150;
+
     if (form?.taskId) form.taskId.value = "";
     if (form?.projectId) form.projectId.value = "";
     if (form?.complete) form.complete.value = "";
     if (form?.dateCreated) form.dateCreated.value = "";
     if (form) form.reset();
-    dialog.close();
+
+    dialog.classList.add('is-closing');
+    setTimeout(() => {
+        dialog.close();
+        dialog.classList.remove('is-closing');
+    }, DIALOG_BOX_TIMING);
 }
 
 export function submitForm(form) {
@@ -67,7 +74,6 @@ export function renderEditTaskFormData(li, newTaskFormDialog) {
     document.getElementById("priority").value = task.priority;
     document.getElementById("project").value = task.project;
     document.getElementById("add-task-btn").textContent = "Save";
-    document.getElementById("add-task-form-header").textContent = "Edit Task";
 }
 
 export function renderEditProjectFormData(projectId, newProjectFormDialog) {
@@ -80,5 +86,4 @@ export function renderEditProjectFormData(projectId, newProjectFormDialog) {
     document.getElementById("projectName").value = project.name;
     document.getElementById("projectColour").value = project.colour;
     document.getElementById("add-project-btn").textContent = "Save";
-    document.getElementById("add-project-form-header").textContent = "Edit Project";
 }

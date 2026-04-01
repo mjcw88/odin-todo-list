@@ -43,11 +43,8 @@ export const eventListeners = {
 
         // New Task Event Listeners
         newTaskBtn.addEventListener("click", () => {
-            document.getElementById("add-task-btn").textContent = "Add";
-            document.getElementById("add-task-form-header").textContent = "Add Task";
-
             date.value = new Date().toISOString().split("T")[0];
-
+            document.getElementById("add-task-btn").textContent = "Add Task";
             renderDialogBox(newTaskFormDialog);
         });
 
@@ -63,9 +60,7 @@ export const eventListeners = {
 
         // New Project Event Listeners
         newProjectBtn.addEventListener("click", () => {
-            document.getElementById("add-project-btn").textContent = "Add";
-            document.getElementById("add-project-form-header").textContent = "Add Project";
-
+            document.getElementById("add-task-btn").textContent = "Add Project";
             renderDialogBox(newProjectFormDialog);
         });
 

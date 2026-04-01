@@ -7,14 +7,22 @@
     --warmGrey: #F2EFED;
     --black: #202020;
     --charcoal: #1A1A1A;
+    --darkGrey: #444444;
     --grey: #666666;
+    --lightGrey: #999999;
+    --darkWhite: #EDEDED;
+    --offWhite: #F5F5F5;
     --white: #FFFFFF;
     --brickRed: #D53828;
+    --buttonRed: #D33322;
+    --darkButtonRed: #C3392C;
     --red: #A81F00;
     --lightRed: #FFEFE5;
     --animationTiming: 250ms ease-in-out;
+    --dialogBoxTiming: 150ms ease-in-out;
     --hamburgerHeight: calc(var(--barHeight) * 3 + var(--hamburgerGap) * 2);
     --headerHeight: 5rem;
+    --font: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 *,
@@ -33,7 +41,7 @@ html, body {
 body {
     height: 100vh;
     width: 100%;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: var(--font);
     font-size: 1rem;
     color: var(--black);
     line-height: 1.5;
@@ -45,7 +53,7 @@ body {
 
 button {
     font-size: 1rem;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: var(--font);
     cursor: pointer;
     border: none;
     outline: none;
@@ -283,21 +291,11 @@ header {
     justify-content: center;
 }
 
-#taskDescription {
-    resize: none;
-    height: 10rem;
-}
-
 .form-row {
     display: flex;
     justify-content: space-between;
     width: 100%;
     gap: 1rem;
-}
-
-.form-row input[type='text'],
-#taskDescription {
-    width: 100%;
 }
 
 .form-row > button,
@@ -359,6 +357,114 @@ header {
     justify-content: space-between;
 }
 
+dialog {
+    border: none;
+    border-radius: 1rem;
+    color: var(--grey);
+    box-shadow: 0 15px 50px rgba(0,0,0,.35);
+    transition: transform var(--dialogBoxTiming), 
+                opacity var(--dialogBoxTiming),
+                display var(--dialogBoxTiming) allow-discrete,
+                overlay var(--dialogBoxTiming) allow-discrete;
+}
+
+dialog::backdrop {
+    backdrop-filter: blur(2px);
+}
+
+label[for="projectColour"] {
+    color: var(--grey);
+    font-weight: normal;
+}
+
+@starting-style {
+    dialog[open] {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+}
+
+dialog:not([open]) {
+    transform: scale(0.8);
+    opacity: 0;
+}
+
+dialog.is-closing {
+    transform: scale(0.8);
+    opacity: 0;
+}
+
+.form-row input[type='text'],
+textarea {
+    width: 100%;
+}
+
+form input[type='text'] {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+textarea {
+    font-family: var(--font);
+    resize: none;
+    height: 5rem;
+}
+
+form input[type='text'],
+form input[type='text']:focus,
+form input[type='date'],
+textarea,
+select {
+    border: none;
+    outline: none;
+}
+
+.date-row label,
+.priority-row label,
+.project-row label,
+.project-form-row label {
+    padding-bottom: 8px;
+}
+
+form input[type='date'],
+select {
+    padding: 0.375rem 0.25rem;
+    border-radius: 0.25rem;
+    background-color: transparent;
+    cursor: pointer;
+    font-family: var(--font);
+}
+
+form input[type='date']:hover,
+select:hover {
+    background-color: var(--offWhite);
+}
+
+#close-new-task-form-btn,
+#close-new-project-form-btn {
+    background-color: var(--offWhite);
+    color: var(--darkGrey);
+    font-weight: 600;
+}
+
+#close-new-task-form-btn:hover,
+#close-new-project-form-btn:hover {
+    background-color: var(--darkWhite);
+    color: var(--black);
+}
+
+#add-task-btn,
+#add-project-btn {
+    background-color: var(--buttonRed);
+    color: var(--white);
+    font-weight: 600;
+}
+
+#add-task-btn:hover,
+#add-project-btn:hover {
+    background-color: var(--darkButtonRed);
+}
+
 @media only screen and (min-width: 768px) {
     body {
         display: grid;
@@ -373,6 +479,10 @@ header {
         grid-column: 1;
         grid-row: 1 / -1;
         align-self: stretch;
+    }
+
+    .sidebar-bumper {
+        display: none;
     }
 
     .sidebar-container {
