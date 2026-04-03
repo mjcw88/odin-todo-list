@@ -3,6 +3,8 @@
     --barWidth: 3.75rem;
     --barHeight: 0.5rem;
     --hamburgerGap: 6px;
+    --sidebarWidth: 22rem;
+    --blur: 2px;
     --cream: #FCFAF8;
     --warmGrey: #F2EFED;
     --black: #202020;
@@ -10,7 +12,10 @@
     --darkGrey: #444444;
     --grey: #666666;
     --lightGrey: #999999;
+    --textBoxWhiteFocus: #BBBBBB;
+    --textBoxWhiteHover: #CCCCCC;
     --darkWhite: #EDEDED;
+    --textBoxWhite: #E6E6E6;
     --offWhite: #F5F5F5;
     --white: #FFFFFF;
     --brickRed: #D53828;
@@ -18,6 +23,9 @@
     --darkButtonRed: #C3392C;
     --red: #A81F00;
     --lightRed: #FFEFE5;
+    --yellow: #D4920A;
+    --green: #2B8A3E;
+    --tickSize: 1.25rem;
     --animationTiming: 250ms ease-in-out;
     --dialogBoxTiming: 150ms ease-in-out;
     --hamburgerHeight: calc(var(--barHeight) * 3 + var(--hamburgerGap) * 2);
@@ -45,6 +53,13 @@ body {
     font-size: 1rem;
     color: var(--black);
     line-height: 1.5;
+}
+
+form,
+.delete-dialogbox-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
 }
 
 .no-transition * {
@@ -86,6 +101,7 @@ button:hover {
     font-weight: bold;
     justify-content: flex-start;
     gap: 0.5rem;
+    margin-bottom: 0.5rem;
 }
 
 #open-new-task-btn svg {
@@ -96,9 +112,9 @@ button:hover {
 }
 
 #new-project-btn {
-    padding: 12px;
     font-weight: bold;
     color: var(--grey);
+    padding: 0.75rem 0.907rem;
 }
 
 #new-project-btn svg {
@@ -108,13 +124,17 @@ button:hover {
     height: var(--size);
 }
 
+#new-project-btn,
 #open-new-task-btn,
-#new-project-btn {
+.cancel-btn,
+.confirm-btn {
     transition: transform 50ms ease-in-out;
 }
 
+#new-project-btn:active,
 #open-new-task-btn:active,
-#new-project-btn:active {
+.cancel-btn:active,
+.confirm-btn:active {
     transform: scale(0.97);
 }
 
@@ -127,11 +147,9 @@ button:hover {
 }
 
 .project-colour {
-    --size: 1rem;
-
-    border-radius: 0.25rem;
-    width: var(--size);
-    height: var(--size);
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .sidebar-project-name {
@@ -144,12 +162,9 @@ button:hover {
 }
 
 header {
-    position: sticky;
-    top: 0;
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    position: relative;
     background-color: var(--white);
     padding: var(--padding);
     height: var(--headerHeight);
@@ -170,7 +185,7 @@ header {
     position: fixed;
     top: var(--padding);
     left: var(--padding);
-    z-index: 2;
+    z-index: 3;
     cursor: pointer;
 }
 
@@ -195,7 +210,8 @@ header {
         width var(--animationTiming),
         rotate var(--animationTiming),
         translate var(--animationTiming),
-        background-color var(--animationTiming);
+        background-color var(--animationTiming),
+        filter var(--animationTiming);
 }
 
 .dropdown-menu input {
@@ -239,9 +255,10 @@ header {
     padding: var(--padding);
     background-color: var(--cream);
     width: 50%;
+    max-width: var(--sidebarWidth);
     height: 100vh;
     transition: translate var(--animationTiming);
-    z-index: 1;
+    z-index: 2;
 }
 
 .sidebar {
@@ -251,6 +268,12 @@ header {
 
 .dropdown-menu:has(input:checked) + .sidebar-container {
     translate: 0;
+}
+
+.dropdown-container:has(input:checked) ~ header,
+.dropdown-container:has(input:checked) ~ .main-body-container {
+    pointer-events: none;
+    filter: blur(var(--blur));
 }
 
 .sidebar-list {
@@ -282,8 +305,8 @@ header {
     top: 50%;
     left: 50%;
     translate: -50% -50%;
-    width: min(100%, 500px);
-    padding: var(--padding);
+    width: min(100%, 31.25rem);
+    padding: 1.5rem;
 }
 
 .form-header {
@@ -301,50 +324,65 @@ header {
 .form-row > button,
 .priority-row,
 .date-row,
-.project-row {
+.project-row,
+.project-name-row,
+.project-colour-row {
     flex: 1;
-}
-
-.form-header,
-.form-row,
-.project-form-row {
-    margin-bottom: 20px;
 }
 
 .priority-row,
 .date-row,
-.project-row {
+.project-row,
+.project-name-row,
+.project-colour-row {
     display: flex;
     flex-direction: column;
-}
-
-.project-form-row {
-    display: flex;
-    flex-direction: column;
+    color: var(--black);
+    font-weight: bold;
 }
 
 .main-body-container {
     overflow-y: auto;
-    height: 100%;
-    padding: var(--padding);
+    height: calc(100vh - var(--headerHeight));
+    padding: 0 var(--padding) var(--padding) var(--padding);
+}
+
+.todo-table-header {
+    display: flex;
+    justify-content: center;
+    position: relative;
+    width: 100%;
+    gap: 0.5rem;
 }
 
 .project-name {
-    cursor: pointer;
+    text-align: center;
+    word-break: break-word;
+    padding-left: 5.625rem;
+    padding-right: 5.625rem;
+}
+
+.todo-table-header > div {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    right: 0;
+}
+
+.todo-list-btn {
+    padding: 0.532rem 0.657rem;
+}
+
+#content {
+    align-items: center;
+    gap: 1rem;
 }
 
 #content,
 #todo-list-container {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
-}
-
-.todo-container {
-    display: flex;
-    justify-content: space-between;
-    border: 1px solid black;
-    cursor: pointer;
+    width: 100%;
 }
 
 .task-container-header {
@@ -360,7 +398,6 @@ header {
 dialog {
     border: none;
     border-radius: 1rem;
-    color: var(--grey);
     box-shadow: 0 15px 50px rgba(0,0,0,.35);
     transition: transform var(--dialogBoxTiming), 
                 opacity var(--dialogBoxTiming),
@@ -369,12 +406,7 @@ dialog {
 }
 
 dialog::backdrop {
-    backdrop-filter: blur(2px);
-}
-
-label[for="projectColour"] {
-    color: var(--grey);
-    font-weight: normal;
+    backdrop-filter: blur(var(--blur));
 }
 
 @starting-style {
@@ -394,12 +426,12 @@ dialog.is-closing {
     opacity: 0;
 }
 
-.form-row input[type='text'],
+#taskName,
 textarea {
     width: 100%;
 }
 
-form input[type='text'] {
+#taskName {
     font-size: 1.5rem;
     font-weight: 600;
 }
@@ -410,8 +442,8 @@ textarea {
     height: 5rem;
 }
 
-form input[type='text'],
-form input[type='text']:focus,
+#taskName,
+#projectName,
 form input[type='date'],
 textarea,
 select {
@@ -419,56 +451,204 @@ select {
     outline: none;
 }
 
+#projectName,
+form input[type='date'],
+textarea,
+select {
+    font-size: 1rem;
+}
+
+#projectName,
+form input[type='date'],
+select {
+    border: 0.0625rem solid var(--textBoxWhite);
+}
+
+#new-project-header,
 .date-row label,
 .priority-row label,
 .project-row label,
-.project-form-row label {
-    padding-bottom: 8px;
+.project-form-row label,
+.project-name-row label,
+.project-colour-row label {
+    padding-bottom: 0.5rem;
 }
 
+#projectName,
 form input[type='date'],
 select {
     padding: 0.375rem 0.25rem;
     border-radius: 0.25rem;
     background-color: transparent;
-    cursor: pointer;
     font-family: var(--font);
 }
 
+#projectName:hover,
 form input[type='date']:hover,
 select:hover {
-    background-color: var(--offWhite);
+    border-color: var(--textBoxWhiteHover);
 }
 
-#close-new-task-form-btn,
-#close-new-project-form-btn {
+#projectName:focus,
+form input[type='date']:focus,
+select:focus {
+    border-color: var(--textBoxWhiteFocus);
+}
+
+.cancel-btn {
     background-color: var(--offWhite);
     color: var(--darkGrey);
     font-weight: 600;
 }
 
-#close-new-task-form-btn:hover,
-#close-new-project-form-btn:hover {
+.cancel-btn:hover {
     background-color: var(--darkWhite);
     color: var(--black);
 }
 
-#add-task-btn,
-#add-project-btn {
+.confirm-btn {
     background-color: var(--buttonRed);
     color: var(--white);
     font-weight: 600;
 }
 
-#add-task-btn:hover,
-#add-project-btn:hover {
+.confirm-btn:hover {
     background-color: var(--darkButtonRed);
+}
+
+.delete-dialogbox-container {
+    color: var(--black);
+}
+
+#new-project-header,
+#delete-header {
+    font-size: 1.25rem;
+    font-weight: bold;
+}
+
+#sort-by {
+    cursor: pointer;
+}
+
+#delete-textbox {
+    word-break: break-word;
+}
+
+.empty-tasks {
+    padding: 1rem;
+}
+
+#todo-list-container {
+    gap: 1rem;
+}
+
+#todo-list-container > li {
+    background-color: #FCFCFC;
+    display: flex;
+    border: 0.125rem solid var(--textBoxWhiteHover);
+    flex: 1;
+    cursor: pointer;
+    padding: 0.5rem;
+    gap: 1rem;
+    border-radius: 1rem;
+    transition: box-shadow var(--animationTiming);
+    box-shadow: rgba(0, 0, 0, 0) 0px 5px 15px;
+}
+
+#todo-list-container > li:hover {
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.complete-check-box-container,
+.todo-list-delete-container {
+    display: flex;
+    justify-content: center;
+}
+
+.complete-check-box-container {
+    padding-top: 0.5rem;
+}
+
+.todo-list-delete-container {
+    align-self: center;
+}
+
+.todo-list-task-container {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.todo-list-complete {
+    position: relative;
+    display: flex;
+    width: var(--tickSize);
+    height: var(--tickSize);
+}
+
+.todo-list-tick {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    translate: -50% -60%;
+    width: 0.3rem;
+    height: 0.55rem;
+    rotate: 45deg;
+    pointer-events: none;
+}
+
+.todo-list-complete:has(input:checked) .todo-list-tick {
+    display: block;
+}
+
+.todo-list-complete input[type="checkbox"] {
+    appearance: none;
+    width:  var(--tickSize);
+    height: var(--tickSize);
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.todo-list-task-name {
+    font-size: 1.25rem;
+    word-break: break-word;
+}
+
+.todo-description-container {
+    font-size: 1rem;
+    color: var(--grey);
+    word-break: break-word;
+}
+
+.todo-date-and-project-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.5rem;
+    word-break: break-word;
+}
+
+.todo-list-project-name-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.5rem;
+}
+
+.todo-date-container {
+    color: var(--brickRed);
+    word-break: break-word;
+}
+
+.show-more-btn,
+.show-less-btn {
+    color: var(--grey);
 }
 
 @media only screen and (min-width: 768px) {
     body {
         display: grid;
-        grid-template-columns: 20rem 9fr;
+        grid-template-columns: min(var(--sidebarWidth), 600px) 1fr;
         grid-template-rows: auto 1fr;
         min-height: 100vh;
         margin: 0;
@@ -508,23 +688,13 @@ select:hover {
         display: none;
     }
 
-    .new-task-main-body {
-        display: flex;
-        gap: 1rem;
-        flex: 1;
-    }
-
     .main-body-container {
         display: flex;
         justify-content: center;
+        align-items: flex-start;
     }
 
     #content {
-        align-items: center;
-        width: 100%;
-    }
-
-    #todo-list-container {
         width: min(100%, 1200px);
     }
 

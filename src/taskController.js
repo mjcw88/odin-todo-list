@@ -92,7 +92,7 @@ const DEFAULT_TASKS = [
         type: "task",
         name: "fix fence",
         desc: "fix hole in fence to stop dog from escaping",
-        dueDate: defaultDates.sixMonths,
+        dueDate: null,
         priority: 1,
         project: "a1b2c3d4-0002-0000-0000-000000000000",
         complete: true,
@@ -169,7 +169,7 @@ const DEFAULT_TASKS = [
         type: "task",
         name: "fix drawer",
         desc: "fix broken screw in drawer meaning I can't open it properly",
-        dueDate: defaultDates.sixMonths,
+        dueDate: null,
         priority: 0,
         project: null,
         complete: true,
@@ -207,7 +207,7 @@ export function createTask(data) {
     const id = data.taskId === "" ? crypto.randomUUID() : data.taskId;
     const name = data.taskName.trim();
     const desc = data.taskDescription;
-    const dueDate = new Date(data.date);
+    const dueDate = data.date === "" ? null : new Date(data.date);
     const priority = parseInt(data.priority);
     const project = data.project === "null" ? null : data.project;
     const complete = data.complete === "true" ? true : false;

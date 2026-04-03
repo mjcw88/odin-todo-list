@@ -43,7 +43,6 @@ export const eventListeners = {
 
         // New Task Event Listeners
         newTaskBtn.addEventListener("click", () => {
-            date.value = new Date().toISOString().split("T")[0];
             document.getElementById("add-task-btn").textContent = "Add Task";
             renderDialogBox(newTaskFormDialog);
         });
@@ -60,7 +59,8 @@ export const eventListeners = {
 
         // New Project Event Listeners
         newProjectBtn.addEventListener("click", () => {
-            document.getElementById("add-task-btn").textContent = "Add Project";
+            document.getElementById("new-project-header").textContent = "Add Project";
+            document.getElementById("add-project-btn").textContent = "Add Project";
             renderDialogBox(newProjectFormDialog);
         });
 
@@ -103,9 +103,11 @@ export const eventListeners = {
             if (sortbyOrderBtn.dataset.sortByOrder === "asc") {
                 sortbyOrderBtn.textContent = "↓";
                 sortbyOrderBtn.dataset.sortByOrder = "desc"
+                sortbyOrderBtn.title = "Descending";
             } else {
                 sortbyOrderBtn.textContent = "↑";
                 sortbyOrderBtn.dataset.sortByOrder = "asc"
+                sortbyOrderBtn.title = "Ascending";
             }
 
             if (sortBy.value === "") return;
@@ -182,4 +184,3 @@ export function addShowLessClickEvent(btn) {
         renderShowLess(btn.dataset.showLessId);
     })
 }
-

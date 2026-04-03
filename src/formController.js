@@ -15,12 +15,12 @@ export function closeForm(dialog, form = null) {
     if (form?.projectId) form.projectId.value = "";
     if (form?.complete) form.complete.value = "";
     if (form?.dateCreated) form.dateCreated.value = "";
-    if (form) form.reset();
 
     dialog.classList.add('is-closing');
     setTimeout(() => {
         dialog.close();
         dialog.classList.remove('is-closing');
+        if (form) form.reset();
     }, DIALOG_BOX_TIMING);
 }
 
@@ -48,12 +48,9 @@ export function submitForm(form) {
 
     renderSideBar();
 
-
-
     if (data.formType === "newProject") {
         renderProjectTab(project.id);
     } else if (data.project !== "null") {
-        console.log(data);
         renderProjectTab(data.project);
     } else {
         renderHomeTab();
@@ -70,7 +67,7 @@ export function renderEditTaskFormData(li, newTaskFormDialog) {
 
     document.getElementById("taskName").value = task.name;
     document.getElementById("taskDescription").value = task.desc;
-    document.getElementById("date").value = new Date(task.dueDate).toISOString().split("T")[0];
+    document.getElementById("date").value = task.dueDate ? new Date(task.dueDate).toISOString().split("T")[0] : null;
     document.getElementById("priority").value = task.priority;
     document.getElementById("project").value = task.project;
     document.getElementById("add-task-btn").textContent = "Save";
@@ -85,5 +82,6 @@ export function renderEditProjectFormData(projectId, newProjectFormDialog) {
 
     document.getElementById("projectName").value = project.name;
     document.getElementById("projectColour").value = project.colour;
+    document.getElementById("new-project-header").textContent = "Edit Project";
     document.getElementById("add-project-btn").textContent = "Save";
 }

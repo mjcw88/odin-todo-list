@@ -42,7 +42,7 @@
                                         <div class="form-row">
                                             <div class="date-row">
                                                 <label for="date">Date</label>
-                                                <input type="date" id="date" name="date" required>
+                                                <input type="date" id="date" name="date">
                                             </div>
                                             <div class="priority-row">
                                                 <label for="priority">Priority</label>
@@ -57,13 +57,12 @@
                                         <div class=form-row>
                                             <div class="project-row">
                                                 <label for="project">Project</label>
-                                                <select id="project" name="project">
-                                                </select>
+                                                <select id="project" name="project"></select>
                                             </div>
                                         </div>
                                         <div class="form-row">
-                                            <button type="button" id="close-new-task-form-btn">Cancel</button>
-                                            <button type="submit" id="add-task-btn">Add Task</button>
+                                            <button type="button" id="close-new-task-form-btn" class="cancel-btn">Cancel</button>
+                                            <button type="submit" id="add-task-btn" class="confirm-btn">Add Task</button>
                                         </div>
                                     </form>
                                 </div>
@@ -111,32 +110,40 @@
                         </button>
                         <dialog id="new-project-form">
                             <div class="new-project-container">
+                                <div id="new-project-header">
+                                    Add Project
+                                </div>
                                 <div class="new-project-main-body">
                                     <form>
                                         <input type="hidden" name="formType" value="newProject">
                                         <input type="hidden" name="projectId" value="">
                                         <input type="hidden" name="dateCreated" value="">
-                                        <div class="project-form-row">
-                                            <input type="text" id="projectName" name="projectName" maxlength="50" placeholder="Project Name" required>
-                                        </div>
-                                        <div class="project-form-row">
-                                            <label for="projectColour">Colour</label>
-                                            <select id="projectColour" name="projectColour">
-                                                <option value="null">Default</option>
-                                                <option value="#202020">Black</option>
-                                                <option value="#FFFFFF">White</option>
-                                                <option value="#666666">Grey</option>
-                                                <option value="#D53828">Red</option>
-                                                <option value="#7B2D8B">Purple</option>
-                                                <option value="#2B4FB5">Blue</option>
-                                                <option value="#2B8A3E">Green</option>
-                                                <option value="#D4920A">Yellow</option>
-                                                <option value="#D4580A">Orange</option>
-                                            </select>
+                                        <div class="form-row">
+                                            <div class="project-name-row">
+                                                <label for="projectName">Name</label>
+                                                <input type="text" id="projectName" name="projectName" maxlength="50" required>
+                                            </div>
                                         </div>
                                         <div class="form-row">
-                                            <button type="button" id="close-new-project-form-btn">Cancel</button>
-                                            <button type="submit" id="add-project-btn">Add Project</button>
+                                            <div class="project-colour-row">
+                                                <label for="projectColour">Colour</label>
+                                                <select id="projectColour" name="projectColour">
+                                                    <option value="null">Default</option>
+                                                    <option value="0,0,12.6">Black</option>
+                                                    <option value="0,0,100">White</option>
+                                                    <option value="0,0,50">Grey</option>
+                                                    <option value="5.6,68.4,89.6">Red</option>
+                                                    <option value="289.8,51.1,76.1">Purple</option>
+                                                    <option value="224.4,61.6,83.9">Blue</option>
+                                                    <option value="132,52.5,75.5">Green</option>
+                                                    <option value="40.5,91,83.5">Yellow</option>
+                                                    <option value="23.2,91,83.5">Orange</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <button type="button" id="close-new-project-form-btn" class="cancel-btn">Cancel</button>
+                                            <button type="submit" id="add-project-btn" class="confirm-btn">Add Project</button>
                                         </div>
                                     </form>
                                 </div>
@@ -158,17 +165,19 @@
             <option value="project">Project</option>
             <option value="task">Task</option>
         </select>
-        <button id="sort-by-order-btn" data-sort-by-order="asc">↑</button>
+        <button id="sort-by-order-btn" data-sort-by-order="asc" title="Ascending">↑</button>
     </header>
     <div class="main-body-container">
         <div id="content">
         </div>
         <dialog id="delete-dialog-box">
-            <div id="delete-header"></div>
-            <div id="delete-textbox"></div>
-            <div>
-                <button id="cancel-delete">Cancel</button>
-                <button id="confirm-delete">Delete</button>
+            <div class="delete-dialogbox-container">
+                <div id="delete-header"></div>
+                <div id="delete-textbox"></div>
+                <div class="form-row">
+                    <button id="cancel-delete" class="cancel-btn">Cancel</button>
+                    <button id="confirm-delete" class="confirm-btn">Delete</button>
+                </div>
             </div>
         </dialog>
     </div>

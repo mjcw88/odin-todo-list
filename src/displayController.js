@@ -57,8 +57,34 @@ function addSelectedClass(id) {
     });
 }
 
+function createSvg(svgPath, colour, fill = "none", size = "1.5rem") {
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.setAttribute("width", size);
+    svg.setAttribute("height", size);
+    svg.setAttribute("viewBox", "0 0 24 24");
+    svg.setAttribute("fill", fill);
+    svg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+
+    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    path.setAttribute("d", svgPath);
+    path.setAttribute("stroke", colour);
+    path.setAttribute("stroke-width", "2");
+    path.setAttribute("stroke-linecap", "round");
+    path.setAttribute("stroke-linejoin", "round");
+
+    svg.appendChild(path);
+
+    return svg;
+}
+
 function renderTaskList(tasks, headerText, tab, isProjectTab = false) {
     content.innerHTML = "";
+
+    const BLACK = "#202020";
+    const RED = "#D33322";
+
+    const editSvgPath = "M15 6.5L17.5 9M11 20H20M4 20V17.5L16.75 4.75C17.4404 4.05964 18.5596 4.05964 19.25 4.75V4.75C19.9404 5.44036 19.9404 6.55964 19.25 7.25L6.5 20H4Z";
+    const deleteSvgPath = "M6 7V18C6 19.1046 6.89543 20 8 20H16C17.1046 20 18 19.1046 18 18V7M6 7H5M6 7H8M18 7H19M18 7H16M10 11V16M14 11V16M8 7V5C8 3.89543 8.89543 3 10 3H14C15.1046 3 16 3.89543 16 5V7M8 7H16";
 
     const header = document.createElement("div");
     header.className = "todo-table-header";
@@ -71,20 +97,25 @@ function renderTaskList(tasks, headerText, tab, isProjectTab = false) {
     header.append(headerEl);
     
     if (isProjectTab) {
+        const editSvg = createSvg(editSvgPath, BLACK);
+        const deleteSvg = createSvg(deleteSvgPath, RED);
+
         headerEl.className = "project-name";
 
         const btnDiv = document.createElement("div");
 
         const editDiv = document.createElement("div");
         const editBtn = document.createElement("button");
-        editBtn.textContent = "Edit";
+        editBtn.className = "todo-list-btn";
+        editBtn.append(editSvg);
 
         addEditProjectClickEvent(editBtn, tab);
 
         const deleteDiv = document.createElement("div");
         const deleteBtn = document.createElement("button");
+        deleteBtn.className = "todo-list-btn";
         deleteBtn.dataset.deleteId = tab;
-        deleteBtn.textContent = "Delete";
+        deleteBtn.append(deleteSvg);
 
         addDeleteClickEvent(deleteBtn, isProjectTab);
 
@@ -108,49 +139,128 @@ function renderTaskList(tasks, headerText, tab, isProjectTab = false) {
         const li = document.createElement("li");
         li.className = "todo-container";
         li.dataset.taskId = task.id;
-        li.dataset.dueDate = new Date(task.dueDate);
+        li.dataset.dueDate = task.dueDate ? new Date(task.dueDate) : null;
         li.dataset.priority = task.priority;
         li.dataset.dateCreated = task.dateCreated;
 
         addEditTaskClickEvent(li);
 
         const completeDiv = document.createElement("div");
+        completeDiv.className = "complete-check-box-container";
+
+        const completeLabel = document.createElement("label");
+        completeLabel.className = "todo-list-complete";
+
         const completeCheckBox = document.createElement("input");
-        completeCheckBox.className = "todo-list-complete";
         completeCheckBox.type = "checkbox";
         completeCheckBox.dataset.completeId = task.id;
+
+        let h, s, l; 
+        if (task.priority === 3) {
+            // Red
+            h = 5.6;
+            s = 68.4;
+            l = 89.6;
+        } else if (task.priority === 2) {
+            // Yellow
+            h = 40;
+            s = 91;
+            l = 83.5;
+        } else if (task.priority === 1) {
+            // Green
+            h = 132;
+            s = 52.5;
+            l = 75.5;
+        } else {
+            // Grey
+            h = 0;
+            s = 0;
+            l = 95;
+        }
+
+        completeCheckBox.style.background = `hsl(${h}, ${s}%, ${l}%)`;
+        completeCheckBox.style.border = `0.125rem solid hsl(${darkenColour(h, s, l)})`;
         if (task.complete) completeCheckBox.checked = true;
 
         addCompleteChangeEvent(completeCheckBox);
 
+        const tick = document.createElement("span");
+        tick.className = "todo-list-tick";
+
+        const borderStyle = `0.125rem solid hsl(${darkenColour(h, s, l)})`;
+        tick.style.borderRight = borderStyle;
+        tick.style.borderBottom = borderStyle;
+
         const taskDiv = document.createElement("div");
+        taskDiv.className = "todo-list-task-container";
 
         const taskName = document.createElement("div");
         taskName.className = "todo-list-task-name";
         taskName.textContent = task.name;
 
-        const taskDesc = document.createElement("div");
-        taskDesc.dataset.taskDesc = task.id;
-        renderTaskDesc(taskDesc, task.id, task.desc);
-    
-        const taskDateAndProject = document.createElement("div");
-        const taskDate = document.createElement("div");
-        taskDate.textContent = task.dueDate;
+        let taskDesc;
+        if (task.desc !== "") {
+            taskDesc = document.createElement("div");
+            taskDesc.className = "todo-description-container";
+            taskDesc.dataset.taskDesc = task.id;
+            renderTaskDesc(taskDesc, task.id, task.desc);
+        }
 
-        const taskProject = document.createElement("div");
-        taskProject.className = "todo-list-project-name";
-        if (task.projectName) taskProject.textContent = task.projectName;
+        let taskDateAndProject;
+        if (task.dueDate || task.projectName) {
+            taskDateAndProject = document.createElement("div");
+            taskDateAndProject.className = "todo-date-and-project-container";
+        }
+
+        const taskDate = document.createElement("div");
+        taskDate.className = "todo-date-container";
+        if (task.dueDate) taskDate.textContent = task.dueDate;
+
+        let taskProject;
+        if (task.projectName) {
+            taskProject = document.createElement("div");
+            taskProject.className = "todo-list-project-name-container";
+
+            const projectName = document.createElement("div");
+            projectName.className = "todo-list-project-name";
+            projectName.textContent = task.projectName;
+
+            const projectColour = document.createElement("div");
+            projectColour.className = "todo-list-project-colour";
+
+            let h, s, l, colour;
+            if (task.projectColour) {
+                [h, s, l] = task.projectColour.split(",");
+                colour = `hsl(${h}, ${s}%, ${l}%)`;
+            } else {
+                colour = "none";
+            }
+
+            const svgPath = "M3 7C3 5.89543 3.89543 5 5 5L8.67157 5C9.20201 5 9.71071 5.21071 10.0858 5.58579L10.9142 6.41421C11.2893 6.78929 11.798 7 12.3284 7H19C20.1046 7 21 7.89543 21 9V17C21 18.1046 20.1046 19 19 19H5C3.89543 19 3 18.1046 3 17V7Z";
+            const svgColour = `hsl(${darkenColour(h, s, l)})`
+            const svgFill = colour;
+            const svg = createSvg(svgPath, svgColour, svgFill);
+
+            projectColour.appendChild(svg);
+            taskProject.append(projectName, projectColour);
+        }
 
         const deleteDiv = document.createElement("div");
+        deleteDiv.className = "todo-list-delete-container";
+
         const deleteBtn = document.createElement("button");
+        deleteBtn.className = "todo-list-btn";
         deleteBtn.dataset.deleteId = task.id;
-        deleteBtn.textContent = "Delete";
+
+        const deleteSvg = createSvg(deleteSvgPath, RED);
+        deleteBtn.appendChild(deleteSvg);
 
         addDeleteClickEvent(deleteBtn);
 
-        completeDiv.appendChild(completeCheckBox);
-        taskDateAndProject.append(taskDate, taskProject);
-        taskDiv.append(taskName, taskDesc, taskDateAndProject);
+        completeLabel.append(completeCheckBox, tick);
+        completeDiv.appendChild(completeLabel);
+        if (taskDateAndProject) taskDateAndProject.append(...[taskDate, taskProject].filter(Boolean));
+        taskDiv.append(...[taskName, taskDesc, taskDateAndProject].filter(Boolean));
         deleteDiv.appendChild(deleteBtn);
         li.append(completeDiv, taskDiv, deleteDiv);
         ul.appendChild(li);
@@ -159,13 +269,9 @@ function renderTaskList(tasks, headerText, tab, isProjectTab = false) {
     content.appendChild(ul);
 }
 
-function darkenColour(colour) {
-    const darkenLevel = 0.7;
-    const hex = parseInt(colour.replace("#", ""), 16);
-    const r = Math.floor((hex >> 16) * darkenLevel);
-    const g = Math.floor(((hex >> 8) & 0xff) * darkenLevel);
-    const b = Math.floor((hex & 0xff) * darkenLevel);
-    return `rgb(${r}, ${g}, ${b})`;
+function darkenColour(h = 0, s = 0, l = 100) {
+    const AMOUNT = 40;
+    return `${h}, ${s}%, ${Math.max(0, l - AMOUNT)}%`;
 }
 
 export function renderSideBar() {
@@ -201,9 +307,21 @@ export function renderSideBar() {
 
         const projectColour = document.createElement("div");
         projectColour.className = "project-colour";
-        if (!project.colour) project.colour = "transparent";
-        projectColour.style.backgroundColor = project.colour;
-        projectColour.style.border = `0.0625rem solid ${darkenColour(project.colour)}`;
+
+        let h, s, l, colour;
+        if (project.colour) {
+            [h, s, l] = project.colour.split(",");
+            colour = `hsl(${h}, ${s}%, ${l}%)`;
+        } else {
+            colour = "none";
+        }
+
+        const svgPath = "M3 7C3 5.89543 3.89543 5 5 5L8.67157 5C9.20201 5 9.71071 5.21071 10.0858 5.58579L10.9142 6.41421C11.2893 6.78929 11.798 7 12.3284 7H19C20.1046 7 21 7.89543 21 9V17C21 18.1046 20.1046 19 19 19H5C3.89543 19 3 18.1046 3 17V7Z";
+        const svgColour = `hsl(${darkenColour(h, s, l)})`
+        const svgFill = colour;
+        const svg = createSvg(svgPath, svgColour, svgFill);
+
+        projectColour.appendChild(svg);
 
         const projectName = document.createElement("div");
         projectName.className = "sidebar-project-name";
@@ -331,7 +449,7 @@ export function renderDeleteText(id, isProjectTab) {
     textBox.appendChild(strong);
 
     if (isProjectTab) {
-        textBox.appendChild(document.createTextNode(" project will be permanently deleted. This will also delete all associated tasks."));
+        textBox.appendChild(document.createTextNode(" project and all of its tasks will be permanently deleted."));
     } else {
         textBox.appendChild(document.createTextNode(" task will be permanently deleted."));
     }
@@ -366,10 +484,14 @@ export function sortTaskList(sortBy, orderBy) {
             break;
         case "dueDate":
             comparator = (a, b) => {
-                let aVal = new Date(a.dataset.dueDate).getTime();
-                let bVal = new Date(b.dataset.dueDate).getTime();
+                let aVal = a.dataset.dueDate !== "null" ? new Date(a.dataset.dueDate).getTime() : null;
+                let bVal = b.dataset.dueDate !== "null" ? new Date(b.dataset.dueDate).getTime() : null;
 
-                if (aVal !== bVal) return aVal - bVal;
+                if (aVal !== bVal) {
+                    if (aVal === null) return 1;
+                    if (bVal === null) return -1;
+                    return aVal - bVal;
+                }
 
                 aVal = a.querySelector(".todo-list-task-name").textContent;
                 bVal = b.querySelector(".todo-list-task-name").textContent;
@@ -406,8 +528,8 @@ export function sortTaskList(sortBy, orderBy) {
             break;
         case "project":
             comparator = (a, b) => {
-                let aVal = a.querySelector(".todo-list-project-name").textContent;
-                let bVal = b.querySelector(".todo-list-project-name").textContent;
+                let aVal = a.querySelector(".todo-list-project-name") ? a.querySelector(".todo-list-project-name").textContent : "";
+                let bVal = b.querySelector(".todo-list-project-name") ? b.querySelector(".todo-list-project-name").textContent : "";
 
                 if (aVal !== bVal) return aVal.localeCompare(bVal);
 

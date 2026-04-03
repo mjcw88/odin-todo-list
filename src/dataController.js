@@ -8,7 +8,7 @@ function fetchData() {
 
     objects.forEach(obj => {
         if (obj.type === "task") {
-            obj.dueDate = new Date(obj.dueDate);
+            if (obj.dueDate) obj.dueDate = new Date(obj.dueDate);
             tasks.push(obj);
         } else if (obj.type === "project") {
             projects.push(obj);
@@ -23,9 +23,10 @@ function assignProjectsToTasks(tasks, projects) {
         if (task.project) {
             const project = projects.find(({ id }) => id === task.project);
             task.projectName = project?.name;
+            task.projectColour = project?.colour;
         }
 
-        task.dueDate = getDate(task.dueDate);
+        task.dueDate = task.dueDate ? formatDate(task.dueDate) : null;
     });
 
     return tasks;
@@ -33,10 +34,14 @@ function assignProjectsToTasks(tasks, projects) {
 
 function sortTasks(tasks) {
     tasks.sort((a, b) => {
-        const aDueDate = new Date(a.dueDate).getTime();
-        const bDueDate = new Date(b.dueDate).getTime();
+        const aDueDate = a.dueDate ? new Date(a.dueDate).getTime() : null;
+        const bDueDate = b.dueDate ? new Date(b.dueDate).getTime() : null;
 
-        if (aDueDate !== bDueDate)  return aDueDate - bDueDate;
+        if (aDueDate !== bDueDate) {
+            if (aDueDate === null) return 1;
+            if (bDueDate === null) return -1;
+            return aDueDate - bDueDate;
+        }
 
         const nameCompare = a.name.localeCompare(b.name);
 
@@ -47,7 +52,7 @@ function sortTasks(tasks) {
     return tasks;
 }
 
-function getDate(taskDueDate) {
+function formatDate(taskDueDate) {
     const date = new Date(taskDueDate);
     const day = date.getDate();
     const month = date.toLocaleString("en-GB", { month: "short" });
@@ -68,21 +73,22 @@ export function loadSideBarData() {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-
     tasks.forEach(task => {
         if (task.complete) {
             completedCount++;
             return;
         }
 
-        if (task.dueDate.toDateString() === today.toDateString()) {
+        if (task.dueDate === null) {
+            upcomingCount++;
+        } else if (task.dueDate.toDateString() === today.toDateString()) {
             todayCount++;
         } else if (task.dueDate > today) {
             upcomingCount++;
         } else {
             overdueCount++;
         }
-    })
+    });
 
     projects.forEach(project => {
         project.dateCreated = new Date(project.dateCreated);
@@ -113,7 +119,7 @@ export function loadTodayTabData() {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    const todayTasks = tasks.filter((task) => task.dueDate.toDateString() === today.toDateString() && task.complete === false);
+    const todayTasks = tasks.filter((task) => task.dueDate !== null && task.dueDate.toDateString() === today.toDateString() && task.complete === false);
 
     sortTasks(todayTasks);
 
@@ -126,7 +132,12 @@ export function loadUpcomingTabData() {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    const upcomingTasks = tasks.filter((task) => task.dueDate > today && task.complete === false);
+    const upcomingTasks = tasks.filter((task) => {
+        if (!task.dueDate) return false;
+        const dueDate = new Date(task.dueDate);
+        dueDate.setHours(0, 0, 0, 0);
+        return dueDate > today && task.complete === false;
+    });
 
     sortTasks(upcomingTasks);
 
@@ -149,7 +160,7 @@ export function loadOverdueTabData() {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    const overDueTasks = tasks.filter((task) => task.dueDate < today && task.complete == false);
+    const overDueTasks = tasks.filter((task) => task.dueDate !== null && task.dueDate < today && task.complete === false);
 
     sortTasks(overDueTasks);
 
@@ -164,7 +175,7 @@ export function loadProjectData(projectId) {
     sortTasks(projectTasks);
 
     projectTasks.forEach(task => {
-        task.dueDate = getDate(task.dueDate);
+        if (task.dueDate) task.dueDate = formatDate(task.dueDate);
     });
 
     const project = projects.find((project) => project.id === projectId);
