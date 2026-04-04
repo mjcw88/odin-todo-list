@@ -19,7 +19,7 @@ function renderEmptyTable() {
 
 function renderTaskDesc(taskDesc, id, desc) {
     if (desc.length > 100) {
-        taskDesc.textContent = desc.slice(0, 100) + "…";
+        taskDesc.textContent = desc.slice(0, 150) + "…";
 
         const showMoreDiv = document.createElement("div");
 
@@ -464,8 +464,8 @@ export function sortTaskList(sortBy, orderBy) {
     switch(sortBy) {
         case "complete":
             comparator = (a, b) => {
-                let aVal = a.querySelector(".todo-list-complete").checked;
-                let bVal = b.querySelector(".todo-list-complete").checked;
+                let aVal = a.querySelector(".todo-list-complete input[type='checkbox']").checked;
+                let bVal = b.querySelector(".todo-list-complete input[type='checkbox']").checked;
 
                 if (aVal !== bVal) return aVal - bVal;
 

@@ -2,9 +2,9 @@
 import { loadAllFromStorage } from "./storageController.js";
 
 function fetchData() {
+    const objects = loadAllFromStorage();
     const tasks = [];
     const projects = [];
-    const objects = loadAllFromStorage();
 
     objects.forEach(obj => {
         if (obj.type === "task") {
@@ -16,20 +16,6 @@ function fetchData() {
     });
 
     return { tasks, projects };
-}
-
-function assignProjectsToTasks(tasks, projects) {
-    tasks.forEach(task => {
-        if (task.project) {
-            const project = projects.find(({ id }) => id === task.project);
-            task.projectName = project?.name;
-            task.projectColour = project?.colour;
-        }
-
-        task.dueDate = task.dueDate ? formatDate(task.dueDate) : null;
-    });
-
-    return tasks;
 }
 
 function sortTasks(tasks) {
@@ -44,10 +30,33 @@ function sortTasks(tasks) {
         }
 
         const nameCompare = a.name.localeCompare(b.name);
-
         if (nameCompare !== 0) return nameCompare;
-
         return a.dateCreated - b.dateCreated;
+    });
+    return tasks;
+}
+
+function isOverDue(today, dueDate, complete) {
+    if (today > dueDate && !complete) {
+        return true;
+    }
+    return false;
+}
+
+function getToday() {
+    const date = new Date();
+    date.setHours(0, 0, 0, 0);
+    return date;
+}
+
+function assignProjectsToTasks(tasks, projects) {
+    tasks.forEach(task => {
+        if (task.project) {
+            const project = projects.find(({ id }) => id === task.project);
+            task.projectName = project?.name;
+            task.projectColour = project?.colour;
+        }
+        task.dueDate = task.dueDate ? formatDate(task.dueDate) : null;
     });
     return tasks;
 }
@@ -57,28 +66,24 @@ function formatDate(taskDueDate) {
     const day = date.getDate();
     const month = date.toLocaleString("en-GB", { month: "short" });
     const year = date.getFullYear();
-
     return `${day} ${month} ${year}`;
 }
 
 export function loadSideBarData() {
     const { tasks, projects } = fetchData();
-
     const homeCount = tasks.length;
+    const today = getToday();
     let todayCount = 0;
     let upcomingCount = 0;
     let overdueCount = 0;
     let completedCount = 0;
-
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
 
     tasks.forEach(task => {
         if (task.complete) {
             completedCount++;
             return;
         }
-
+        
         if (task.dueDate === null) {
             upcomingCount++;
         } else if (task.dueDate.toDateString() === today.toDateString()) {
@@ -99,87 +104,71 @@ export function loadSideBarData() {
             }
         });
     });
-
     projects.sort((a, b) => a.dateCreated - b.dateCreated);
-
     return { homeCount, todayCount, upcomingCount, overdueCount, completedCount, projects };
 }
 
 export function loadHomeTabData() {
     const { tasks, projects } = fetchData();
+    const today = getToday();
 
     sortTasks(tasks);
+
+    tasks.forEach(task => {
+        task.overDue = isOverDue(today, task.dueDate?.setHours(0, 0, 0, 0), task.complete);
+    })
 
     return assignProjectsToTasks(tasks, projects);
 }
 
 export function loadTodayTabData() {
     const { tasks, projects } = fetchData();
-
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-
-    const todayTasks = tasks.filter((task) => task.dueDate !== null && task.dueDate.toDateString() === today.toDateString() && task.complete === false);
+    const today = getToday();
+    const todayTasks = tasks.filter((task) => task.dueDate?.toDateString() === today.toDateString() && !task.complete);
 
     sortTasks(todayTasks);
-
     return assignProjectsToTasks(todayTasks, projects);
 }
 
 export function loadUpcomingTabData() {
     const { tasks, projects } = fetchData();
-
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-
-    const upcomingTasks = tasks.filter((task) => {
-        if (!task.dueDate) return false;
-        const dueDate = new Date(task.dueDate);
-        dueDate.setHours(0, 0, 0, 0);
-        return dueDate > today && task.complete === false;
-    });
+    const today = getToday();
+    const upcomingTasks = tasks.filter((task) => (!task.dueDate || task.dueDate?.setHours(0, 0, 0, 0) > today) && !task.complete);
 
     sortTasks(upcomingTasks);
-
     return assignProjectsToTasks(upcomingTasks, projects);
 } 
 
-export function loadCompletedTabData() {
-    const { tasks, projects } = fetchData();
-
-    const completedTasks = tasks.filter((task) => task.complete === true);
-
-    sortTasks(completedTasks);
-
-    return assignProjectsToTasks(completedTasks, projects);
-}
-
 export function loadOverdueTabData() {
     const { tasks, projects } = fetchData();
-
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-
-    const overDueTasks = tasks.filter((task) => task.dueDate !== null && task.dueDate < today && task.complete === false);
+    const today = getToday();
+    const overDueTasks = tasks.filter((task) => task.dueDate?.setHours(0, 0, 0, 0) < today && !task.complete);
 
     sortTasks(overDueTasks);
-
     return assignProjectsToTasks(overDueTasks, projects);
+}
+
+export function loadCompletedTabData() {
+    const { tasks, projects } = fetchData();
+    const completedTasks = tasks.filter((task) => task.complete);
+
+    sortTasks(completedTasks);
+    return assignProjectsToTasks(completedTasks, projects);
 }
 
 export function loadProjectData(projectId) {
     const { tasks, projects } = fetchData();
-
     const projectTasks = tasks.filter((task) => task.project === projectId);
+    const today = getToday();
 
     sortTasks(projectTasks);
 
     projectTasks.forEach(task => {
+        task.overDue = isOverDue(today, task.dueDate?.setHours(0, 0, 0, 0), task.complete);
         if (task.dueDate) task.dueDate = formatDate(task.dueDate);
     });
 
     const project = projects.find((project) => project.id === projectId);
-
     const projectName = project.name;
 
     return { projectTasks, projectName };

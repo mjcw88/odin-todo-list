@@ -25,7 +25,7 @@
     --lightRed: #FFEFE5;
     --yellow: #D4920A;
     --green: #2B8A3E;
-    --tickSize: 1.25rem;
+    --tickSize: 2rem;
     --animationTiming: 250ms ease-in-out;
     --dialogBoxTiming: 150ms ease-in-out;
     --hamburgerHeight: calc(var(--barHeight) * 3 + var(--hamburgerGap) * 2);
@@ -548,7 +548,7 @@ select:focus {
     border: 0.125rem solid var(--textBoxWhiteHover);
     flex: 1;
     cursor: pointer;
-    padding: 0.5rem;
+    padding: 1rem;
     gap: 1rem;
     border-radius: 1rem;
     transition: box-shadow var(--animationTiming);
@@ -592,8 +592,8 @@ select:focus {
     top: 50%;
     left: 50%;
     translate: -50% -60%;
-    width: 0.3rem;
-    height: 0.55rem;
+    width: 0.45rem;
+    height: 0.9rem;
     rotate: 45deg;
     pointer-events: none;
 }
