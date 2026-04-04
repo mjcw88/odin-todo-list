@@ -1,7 +1,7 @@
 // Module imports
 import { createTask } from "./taskController.js";
 import { createProject } from "./projectController.js"
-import { renderSideBar, renderHomeTab, renderProjectTab } from "./displayController.js";
+import { renderSideBar, renderHomeTab, renderTodayTab, renderUpcomingTab, renderOverdueTab, renderCompletedTab, renderProjectTab } from "./displayController.js";
 import { fetchItem } from "./storageController.js";
 
 export function renderDialogBox(dialog) {
@@ -15,6 +15,7 @@ export function closeForm(dialog, form = null) {
     if (form?.projectId) form.projectId.value = "";
     if (form?.complete) form.complete.value = "";
     if (form?.dateCreated) form.dateCreated.value = "";
+    if (form?.editTask) form.editTask.value = "";
 
     dialog.classList.add('is-closing');
     setTimeout(() => {
@@ -48,13 +49,26 @@ export function submitForm(form) {
 
     renderSideBar();
 
-    if (data.formType === "newProject") {
-        renderProjectTab(project.id);
-    } else if (data.project !== "null") {
-        renderProjectTab(data.project);
-    } else {
-        renderHomeTab();
+    const TAB_RENDERERS = {
+        home: renderHomeTab,
+        today: renderTodayTab,
+        upcoming: renderUpcomingTab,
+        overdue: renderOverdueTab,
+        completed: renderCompletedTab,
+    };
+
+    if (data.editTask === "true") {
+        const header = document.getElementById("main-tab-header");
+        const projectTab = header.dataset.projectTab;
+        const tab = header.dataset.tabId;
+        const renderTab = projectTab === "true" ? () => renderProjectTab(tab) : (TAB_RENDERERS[tab] ?? renderHomeTab);
+        return renderTab();
     }
+
+    if (data.formType === "newProject") return renderProjectTab(project.id);
+    if (data.project !== "null") return renderProjectTab(data.project);
+
+    renderHomeTab();
 }
 
 export function renderEditTaskFormData(li, newTaskFormDialog) {
@@ -64,6 +78,7 @@ export function renderEditTaskFormData(li, newTaskFormDialog) {
     form.taskId.value = task.id;
     form.complete.value = task.complete;
     form.dateCreated.value = task.dateCreated;
+    form.editTask.value = true;
 
     document.getElementById("taskName").value = task.name;
     document.getElementById("taskDescription").value = task.desc;

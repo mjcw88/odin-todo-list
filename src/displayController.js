@@ -1,16 +1,10 @@
 // Module imports
 import { loadSideBarData, loadHomeTabData, loadTodayTabData, loadUpcomingTabData, loadCompletedTabData, loadOverdueTabData, loadProjectData } from "./dataController.js";
-import { addCompleteChangeEvent, addProjectClickEvent, addEditProjectClickEvent, addEditTaskClickEvent, addDeleteClickEvent, addShowMoreClickEvent, addShowLessClickEvent } from "./eventsController.js";
+import { addCompleteChangeEvent, addProjectClickEvent, addEditProjectClickEvent, addEditTaskClickEvent, addDeleteClickEvent, addShowMoreClickEvent, addShowLessClickEvent, addMouseEnterEvent, addMouseLeaveEvent } from "./eventsController.js";
 import { fetchItem } from "./storageController.js";
 
-// Consts
-const dropDownMenuLabel = document.getElementById("dropdown-menu-label");
-const dropDownMenuCheckBox = document.getElementById("dropdown-menu-checkbox");
-const projectSidebarList = document.getElementById("project-sidebar-list");
-const projectSelection = document.getElementById("project");
-const content = document.getElementById("content");
-
 function renderEmptyTable() {
+    const content = document.getElementById("content");
     const div = document.createElement("div");
     div.textContent = "Empty!";
     div.className = "empty-tasks";
@@ -77,7 +71,32 @@ function createSvg(svgPath, colour, fill = "none", size = "1.5rem") {
     return svg;
 }
 
+export function renderBorderColour(li, checkBox, dueDate) {
+    if (checkBox.checked) { 
+        const colour = [132, 52.5, 95];
+        li.style.border = `0.125rem solid hsl(${darkenColour(colour)})`;
+        li.style.background = `hsl(${colour[0]}, ${colour[1]}%, ${colour[2]}%)`;
+    } else if (isOverdue(dueDate)) {
+        const colour = [5.6, 68.4, 96];
+        li.style.border = `0.125rem solid hsl(${darkenColour(colour)})`;
+        li.style.background = `hsl(${colour[0]}, ${colour[1]}%, ${colour[2]}%)`;
+    } else {
+        const border = [0, 0, 80];
+        const background = [0, 0, 98.82]
+        li.style.border = `0.125rem solid hsl(${border[0]}, ${border[1]}%, ${border[2]}%)`;
+        li.style.background = `hsl(${background[0]}, ${background[1]}%, ${background[2]}%)`;
+    }
+}
+
+function isOverdue(dueDate) {
+    if (!dueDate) return false;
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return today > new Date(dueDate);
+}
+
 function renderTaskList(tasks, headerText, tab, isProjectTab = false) {
+    const content = document.getElementById("content");
     content.innerHTML = "";
 
     const BLACK = "#202020";
@@ -143,6 +162,12 @@ function renderTaskList(tasks, headerText, tab, isProjectTab = false) {
         li.dataset.priority = task.priority;
         li.dataset.dateCreated = task.dateCreated;
 
+        if (task.overdue) {
+            const colour = [5.6, 68.4, 96];
+            li.style.border = `0.125rem solid hsl(${darkenColour(colour)})`;
+            li.style.background = `hsl(${colour[0]}, ${colour[1]}%, ${colour[2]}%)`;
+        }
+
         addEditTaskClickEvent(li);
 
         const completeDiv = document.createElement("div");
@@ -155,39 +180,37 @@ function renderTaskList(tasks, headerText, tab, isProjectTab = false) {
         completeCheckBox.type = "checkbox";
         completeCheckBox.dataset.completeId = task.id;
 
-        let h, s, l; 
+        let colour;
         if (task.priority === 3) {
             // Red
-            h = 5.6;
-            s = 68.4;
-            l = 89.6;
+            colour = [5.6, 68.4, 89.6];
         } else if (task.priority === 2) {
             // Yellow
-            h = 40;
-            s = 91;
-            l = 83.5;
+            colour = [40, 91, 83.5];
         } else if (task.priority === 1) {
             // Green
-            h = 132;
-            s = 52.5;
-            l = 75.5;
+            colour = [132, 52.5, 75.5];
         } else {
             // Grey
-            h = 0;
-            s = 0;
-            l = 95;
+            colour = [0, 0, 95];
         }
 
-        completeCheckBox.style.background = `hsl(${h}, ${s}%, ${l}%)`;
-        completeCheckBox.style.border = `0.125rem solid hsl(${darkenColour(h, s, l)})`;
-        if (task.complete) completeCheckBox.checked = true;
+        completeCheckBox.style.background = `hsl(${colour[0]}, ${colour[1]}%, ${colour[2]}%)`
+        completeCheckBox.style.border = `0.125rem solid hsl(${darkenColour(colour)})`;
 
-        addCompleteChangeEvent(completeCheckBox);
+        if (task.complete) {
+            completeCheckBox.checked = true;
+            renderBorderColour(li, completeCheckBox, task.dueDate);
+        };
+
+        addMouseEnterEvent(completeLabel, colour);
+        addMouseLeaveEvent(completeLabel);
+        addCompleteChangeEvent(li, completeCheckBox, task.dueDate);
 
         const tick = document.createElement("span");
         tick.className = "todo-list-tick";
 
-        const borderStyle = `0.125rem solid hsl(${darkenColour(h, s, l)})`;
+        const borderStyle = `0.125rem solid hsl(${darkenColour(colour)})`;
         tick.style.borderRight = borderStyle;
         tick.style.borderBottom = borderStyle;
 
@@ -228,20 +251,9 @@ function renderTaskList(tasks, headerText, tab, isProjectTab = false) {
             const projectColour = document.createElement("div");
             projectColour.className = "todo-list-project-colour";
 
-            let h, s, l, colour;
-            if (task.projectColour) {
-                [h, s, l] = task.projectColour.split(",");
-                colour = `hsl(${h}, ${s}%, ${l}%)`;
-            } else {
-                colour = "none";
-            }
+            const folderSvg = renderFolderSvg(task.projectColour);
 
-            const svgPath = "M3 7C3 5.89543 3.89543 5 5 5L8.67157 5C9.20201 5 9.71071 5.21071 10.0858 5.58579L10.9142 6.41421C11.2893 6.78929 11.798 7 12.3284 7H19C20.1046 7 21 7.89543 21 9V17C21 18.1046 20.1046 19 19 19H5C3.89543 19 3 18.1046 3 17V7Z";
-            const svgColour = `hsl(${darkenColour(h, s, l)})`
-            const svgFill = colour;
-            const svg = createSvg(svgPath, svgColour, svgFill);
-
-            projectColour.appendChild(svg);
+            projectColour.appendChild(folderSvg);
             taskProject.append(projectName, projectColour);
         }
 
@@ -269,13 +281,23 @@ function renderTaskList(tasks, headerText, tab, isProjectTab = false) {
     content.appendChild(ul);
 }
 
-function darkenColour(h = 0, s = 0, l = 100) {
-    const AMOUNT = 40;
-    return `${h}, ${s}%, ${Math.max(0, l - AMOUNT)}%`;
+function renderFolderSvg(colour) {
+    colour = colour ?? [0, 0, 100]
+    const svgPath = "M3 7C3 5.89543 3.89543 5 5 5L8.67157 5C9.20201 5 9.71071 5.21071 10.0858 5.58579L10.9142 6.41421C11.2893 6.78929 11.798 7 12.3284 7H19C20.1046 7 21 7.89543 21 9V17C21 18.1046 20.1046 19 19 19H5C3.89543 19 3 18.1046 3 17V7Z";
+    const svgColour = `hsl(${darkenColour(colour)})`
+    const svgFill = colour ? `hsl(${colour[0]}, ${colour[1]}%, ${colour[2]}%)`: "none ";
+    return createSvg(svgPath, svgColour, svgFill);
+}
+
+function darkenColour(colour) {
+    const DARKEN_AMOUNT = 40;
+    return `${colour[0]}, ${colour[1]}%, ${Math.max(0, colour[2] - DARKEN_AMOUNT)}%`;
 }
 
 export function renderSideBar() {
     const info = loadSideBarData();
+    const projectSidebarList = document.getElementById("project-sidebar-list");
+    const projectSelection = document.getElementById("project");
 
     // Renders task counts on main buttons
     document.getElementById("home-count").textContent = info.homeCount;
@@ -308,20 +330,8 @@ export function renderSideBar() {
         const projectColour = document.createElement("div");
         projectColour.className = "project-colour";
 
-        let h, s, l, colour;
-        if (project.colour) {
-            [h, s, l] = project.colour.split(",");
-            colour = `hsl(${h}, ${s}%, ${l}%)`;
-        } else {
-            colour = "none";
-        }
-
-        const svgPath = "M3 7C3 5.89543 3.89543 5 5 5L8.67157 5C9.20201 5 9.71071 5.21071 10.0858 5.58579L10.9142 6.41421C11.2893 6.78929 11.798 7 12.3284 7H19C20.1046 7 21 7.89543 21 9V17C21 18.1046 20.1046 19 19 19H5C3.89543 19 3 18.1046 3 17V7Z";
-        const svgColour = `hsl(${darkenColour(h, s, l)})`
-        const svgFill = colour;
-        const svg = createSvg(svgPath, svgColour, svgFill);
-
-        projectColour.appendChild(svg);
+        const folderSvg = renderFolderSvg(project.colour);
+        projectColour.appendChild(folderSvg);
 
         const projectName = document.createElement("div");
         projectName.className = "sidebar-project-name";
@@ -373,19 +383,19 @@ export function renderUpcomingTab(id) {
     renderTaskList(tasks, headerText, tabId);
 }
 
-export function renderCompletedTab(id) {
-    const tasks = loadCompletedTabData();
-    const headerText = "Completed Tasks";
-    const tabId = "completed";
+export function renderOverdueTab(id) {
+    const tasks = loadOverdueTabData();
+    const headerText = "Overdue Tasks";
+    const tabId = "overdue";
     resetSortBy();
     addSelectedClass(id);
     renderTaskList(tasks, headerText, tabId);
 }
 
-export function renderOverdueTab(id) {
-    const tasks = loadOverdueTabData();
-    const headerText = "Overdue Tasks";
-    const tabId = "overdue";
+export function renderCompletedTab(id) {
+    const tasks = loadCompletedTabData();
+    const headerText = "Completed Tasks";
+    const tabId = "completed";
     resetSortBy();
     addSelectedClass(id);
     renderTaskList(tasks, headerText, tabId);
@@ -572,8 +582,18 @@ export function sortTaskList(sortBy, orderBy) {
     toDoList.append(...listItems);
 }
 
+export function renderCheckBoxShadow(checkbox, colour) {
+    checkbox.style.boxShadow = `0px 0px 1rem 0.0625rem hsl(${darkenColour(colour)}, 0.7)`
+}
+
+export function removeCheckBoxShadow(checkbox) {
+    checkbox.style.boxShadow = "";
+}
+
 export const windowResize = {
     init() {
+        const dropDownMenuLabel = document.getElementById("dropdown-menu-label");
+        const dropDownMenuCheckBox = document.getElementById("dropdown-menu-checkbox");
         let resizeTimer;
         window.addEventListener('resize', () => {
             document.body.classList.add('no-transition');

@@ -26,8 +26,8 @@
     --yellow: #D4920A;
     --green: #2B8A3E;
     --tickSize: 2rem;
-    --animationTiming: 250ms ease-in-out;
-    --dialogBoxTiming: 150ms ease-in-out;
+    --slowAnimationTiming: 300ms ease-in-out;
+    --fastAnimationTiming: 150ms ease-in-out;
     --hamburgerHeight: calc(var(--barHeight) * 3 + var(--hamburgerGap) * 2);
     --headerHeight: 5rem;
     --font: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -47,6 +47,8 @@ html, body {
 }
 
 body {
+    display: flex;
+    flex-direction: column;
     height: 100vh;
     width: 100%;
     font-family: var(--font);
@@ -163,16 +165,18 @@ button:hover {
 
 header {
     display: flex;
-    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: space-between;
     align-items: center;
     background-color: var(--white);
     padding: var(--padding);
-    height: var(--headerHeight);
+    min-height: var(--headerHeight);
 }
 
-.header-container {
-    display: flex;
-    margin-bottom: 1rem;
+.header-bumper {
+    width: var(--barWidth);
+    height: calc(var(--barHeight) * 4);
 }
 
 .dropdown-menu {
@@ -206,12 +210,12 @@ header {
     border-radius: 9999px;
     transform-origin: left center;
     transition: 
-        opacity var(--animationTiming),
-        width var(--animationTiming),
-        rotate var(--animationTiming),
-        translate var(--animationTiming),
-        background-color var(--animationTiming),
-        filter var(--animationTiming);
+        opacity var(--slowAnimationTiming),
+        width var(--slowAnimationTiming),
+        rotate var(--slowAnimationTiming),
+        translate var(--slowAnimationTiming),
+        background-color var(--slowAnimationTiming),
+        filter var(--slowAnimationTiming);
 }
 
 .dropdown-menu input {
@@ -257,7 +261,7 @@ header {
     width: 50%;
     max-width: var(--sidebarWidth);
     height: 100vh;
-    transition: translate var(--animationTiming);
+    transition: translate var(--slowAnimationTiming);
     z-index: 2;
 }
 
@@ -342,9 +346,9 @@ header {
 }
 
 .main-body-container {
+    flex: 1;
     overflow-y: auto;
-    height: calc(100vh - var(--headerHeight));
-    padding: 0 var(--padding) var(--padding) var(--padding);
+    padding: 0 var(--padding) calc(var(--padding) * 2) var(--padding);
 }
 
 .todo-table-header {
@@ -399,10 +403,10 @@ dialog {
     border: none;
     border-radius: 1rem;
     box-shadow: 0 15px 50px rgba(0,0,0,.35);
-    transition: transform var(--dialogBoxTiming), 
-                opacity var(--dialogBoxTiming),
-                display var(--dialogBoxTiming) allow-discrete,
-                overlay var(--dialogBoxTiming) allow-discrete;
+    transition: transform var(--fastAnimationTiming), 
+                opacity var(--fastAnimationTiming),
+                display var(--fastAnimationTiming) allow-discrete,
+                overlay var(--fastAnimationTiming) allow-discrete;
 }
 
 dialog::backdrop {
@@ -528,6 +532,9 @@ select:focus {
 
 #sort-by {
     cursor: pointer;
+    border: 0.125rem solid var(--textBoxWhiteHover);
+    border-radius: 0.5rem;
+    padding: 0.5rem;
 }
 
 #delete-textbox {
@@ -551,12 +558,27 @@ select:focus {
     padding: 1rem;
     gap: 1rem;
     border-radius: 1rem;
-    transition: box-shadow var(--animationTiming);
-    box-shadow: rgba(0, 0, 0, 0) 0px 5px 15px;
 }
 
+#sort-by,
+.todo-list-complete,
+#todo-list-container > li {
+    transition: 
+        border-color var(--fastAnimationTiming),
+        background-color var(--fastAnimationTiming),
+        box-shadow var(--slowAnimationTiming),
+        transform var(--slowAnimationTiming);
+    box-shadow: rgba(0, 0, 0, 0) 0px 0px 0px;
+}
+
+#sort-by:hover,
 #todo-list-container > li:hover {
-    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 0.25rem 1rem;
+}
+
+.todo-list-complete:hover,
+#todo-list-container > li:hover {
+    transform: translateY(-0.0625rem);
 }
 
 .complete-check-box-container,
@@ -584,6 +606,15 @@ select:focus {
     display: flex;
     width: var(--tickSize);
     height: var(--tickSize);
+    border-radius: 50%;
+    transition:
+        box-shadow var(--slowAnimationTiming),
+        transform var(--slowAnimationTiming);
+    transform: translateY(0);
+}
+
+.todo-list-complete:hover {
+    box-shadow: rgba(0, 0, 0, 0.7) 0px 0px 1rem 0.125rem;
 }
 
 .todo-list-tick {
@@ -650,7 +681,7 @@ select:focus {
         display: grid;
         grid-template-columns: min(var(--sidebarWidth), 600px) 1fr;
         grid-template-rows: auto 1fr;
-        min-height: 100vh;
+        height: 100vh;
         margin: 0;
         align-items: start;
     }
@@ -680,8 +711,13 @@ select:focus {
     }
 
     header {
+        justify-content: flex-end;
         grid-column: 2;
         grid-row: 1;
+    }
+
+    .header-bumper {
+        display: none;
     }
 
     .dropdown-menu {
@@ -692,6 +728,8 @@ select:focus {
         display: flex;
         justify-content: center;
         align-items: flex-start;
+        overflow-y: auto;
+        height: 100%;
     }
 
     #content {

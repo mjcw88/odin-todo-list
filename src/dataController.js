@@ -37,10 +37,7 @@ function sortTasks(tasks) {
 }
 
 function isOverDue(today, dueDate, complete) {
-    if (today > dueDate && !complete) {
-        return true;
-    }
-    return false;
+    return today > dueDate && !complete;
 }
 
 function getToday() {
@@ -115,7 +112,7 @@ export function loadHomeTabData() {
     sortTasks(tasks);
 
     tasks.forEach(task => {
-        task.overDue = isOverDue(today, task.dueDate?.setHours(0, 0, 0, 0), task.complete);
+        task.overdue = isOverDue(today, task.dueDate?.setHours(0, 0, 0, 0), task.complete);
     })
 
     return assignProjectsToTasks(tasks, projects);
@@ -145,6 +142,11 @@ export function loadOverdueTabData() {
     const overDueTasks = tasks.filter((task) => task.dueDate?.setHours(0, 0, 0, 0) < today && !task.complete);
 
     sortTasks(overDueTasks);
+
+    overDueTasks.forEach(task => {
+        task.overdue = true;
+    })
+
     return assignProjectsToTasks(overDueTasks, projects);
 }
 
@@ -164,7 +166,7 @@ export function loadProjectData(projectId) {
     sortTasks(projectTasks);
 
     projectTasks.forEach(task => {
-        task.overDue = isOverDue(today, task.dueDate?.setHours(0, 0, 0, 0), task.complete);
+        task.overdue = isOverDue(today, task.dueDate?.setHours(0, 0, 0, 0), task.complete);
         if (task.dueDate) task.dueDate = formatDate(task.dueDate);
     });
 

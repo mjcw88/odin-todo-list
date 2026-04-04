@@ -1,4 +1,4 @@
-import { renderHomeTab, renderTodayTab, renderUpcomingTab, renderCompletedTab, renderOverdueTab, renderProjectTab, renderSideBar, removeTaskFromPage, renderShowMore, renderShowLess, renderDeleteText, sortTaskList } from "./displayController.js";
+import { renderHomeTab, renderTodayTab, renderUpcomingTab, renderCompletedTab, renderOverdueTab, renderProjectTab, renderSideBar, removeTaskFromPage, renderShowMore, renderShowLess, renderDeleteText, sortTaskList, renderCheckBoxShadow, removeCheckBoxShadow, renderBorderColour } from "./displayController.js";
 import { toggleCompleteStatus } from "./taskController.js";
 import { deleteTaskFromStorage, deleteProjectFromStorage } from "./storageController.js";
 import { renderDialogBox, closeForm, submitForm, renderEditTaskFormData, renderEditProjectFormData } from "./formController.js";
@@ -17,7 +17,6 @@ export const eventListeners = {
         const newTaskFormDialog = document.getElementById("new-task-form");
         const newTaskForm = newTaskFormDialog.querySelector("form");
         const closeNewTaskForm = document.getElementById("close-new-task-form-btn");
-        const date = document.getElementById("date")
 
         // New Project consts
         const newProjectBtn = document.getElementById("new-project-btn");
@@ -141,7 +140,7 @@ export function addEditTaskClickEvent(li) {
     });
 }
 
-export function addCompleteChangeEvent(checkBox) {
+export function addCompleteChangeEvent(li, checkBox, dueDate) {
     checkBox.addEventListener("change", (e) => {
         e.stopPropagation();
         const header = document.getElementById("main-tab-header");
@@ -152,6 +151,7 @@ export function addCompleteChangeEvent(checkBox) {
             removeTaskFromPage(checkBox.dataset.completeId);
         }
 
+        renderBorderColour(li, checkBox, dueDate);
         renderSideBar();
     });
 }
@@ -182,5 +182,17 @@ export function addShowLessClickEvent(btn) {
     btn.addEventListener("click", (e) => {
         e.stopPropagation();
         renderShowLess(btn.dataset.showLessId);
+    })
+}
+
+export function addMouseEnterEvent(checkbox, colour) {
+    checkbox.addEventListener("mouseenter", () => {
+        renderCheckBoxShadow(checkbox, colour);
+    })
+}
+
+export function addMouseLeaveEvent(checkbox) {
+    checkbox.addEventListener("mouseleave", () => {
+        removeCheckBoxShadow(checkbox);
     })
 }
