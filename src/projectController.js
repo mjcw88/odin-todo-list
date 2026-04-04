@@ -1,6 +1,7 @@
 // Module imports
 import { saveToStorage } from "./storageController.js";
 
+// Default projects IIFE
 const DEFAULT_PROJECTS = (() => {
     const now = new Date();
     return [
