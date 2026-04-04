@@ -33,6 +33,7 @@
                                         <input type="hidden" name="taskId" value="">
                                         <input type="hidden" name="complete" value="">
                                         <input type="hidden" name="dateCreated" value="">
+                                        <input type="hidden" name="editTask" value="">
                                         <div class="form-row">
                                             <input type="text" id="taskName" name="taskName" maxlength="50" placeholder="Take out the bins" required>
                                         </div>
@@ -129,9 +130,9 @@
                                                 <label for="projectColour">Colour</label>
                                                 <select id="projectColour" name="projectColour">
                                                     <option value="null">Default</option>
-                                                    <option value="0,0,12.6">Black</option>
+                                                    <option value="0,0,40">Black</option>
                                                     <option value="0,0,100">White</option>
-                                                    <option value="0,0,50">Grey</option>
+                                                    <option value="0,0,70">Grey</option>
                                                     <option value="5.6,68.4,89.6">Red</option>
                                                     <option value="289.8,51.1,76.1">Purple</option>
                                                     <option value="224.4,61.6,83.9">Blue</option>
@@ -157,15 +158,18 @@
         </div>
     </div>
     <header>
-        <select id="sort-by">
-            <option value="" disabled selected>Sort by</option>
-            <option value="complete">Complete</option>
-            <option value="dueDate">Due Date</option>
-            <option value="priority">Priority</option>
-            <option value="project">Project</option>
-            <option value="task">Task</option>
-        </select>
-        <button id="sort-by-order-btn" data-sort-by-order="asc" title="Ascending">↑</button>
+        <div class="header-bumper"></div>
+        <div class="sort-by-container">
+            <select id="sort-by">
+                <option value="" disabled selected>Sort by</option>
+                <option value="complete">Complete</option>
+                <option value="dueDate">Due Date</option>
+                <option value="priority">Priority</option>
+                <option value="project">Project</option>
+                <option value="task">Task</option>
+            </select>
+            <button id="sort-by-order-btn" data-sort-by-order="asc" title="Ascending">↑</button>
+        </div>
     </header>
     <div class="main-body-container">
         <div id="content">
